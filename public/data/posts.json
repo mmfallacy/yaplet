@@ -1,0 +1,47 @@
+[
+  {
+    "id": "post-001",
+    "content": "Welcome to my micro-journal! 🌿\n\nThis is where I share quick thoughts, ideas, and discoveries. Each post is limited to **400 characters** and supports basic markdown.\n\nLet's see where this journey takes us.",
+    "createdAt": "2025-01-15T10:30:00Z",
+    "threadId": null,
+    "images": []
+  },
+  {
+    "id": "post-002",
+    "content": "Started a new thread about **building in public**. I'll document my process here, one small step at a time.\n\n→ First lesson: *start before you're ready*",
+    "createdAt": "2025-01-16T14:20:00Z",
+    "threadId": "thread-001",
+    "threadOrder": 1,
+    "images": []
+  },
+  {
+    "id": "post-003",
+    "content": "Day 2 of building in public:\n\nShipped the first version. It's rough around the edges, but it works. That's what matters.\n\n`git push` and breathe.",
+    "createdAt": "2025-01-17T09:15:00Z",
+    "threadId": "thread-001",
+    "threadOrder": 2,
+    "images": []
+  },
+  {
+    "id": "post-004",
+    "content": "Some code I'm proud of today:\n\n```js\nconst simple = true;\n```\n\nKeeping things minimal. No over-engineering.",
+    "createdAt": "2025-01-18T16:45:00Z",
+    "threadId": null,
+    "images": []
+  },
+  {
+    "id": "post-005",
+    "content": "Day 3 update:\n\nAdded dark mode. Small wins compound.\n\n| Feature | Status |\n|---------|--------|\n| Posts | ✅ |\n| Threads | ✅ |\n| Search | 🔜 |",
+    "createdAt": "2025-01-19T11:00:00Z",
+    "threadId": "thread-001",
+    "threadOrder": 3,
+    "images": []
+  },
+  {
+    "id": "post-006",
+    "content": "Reading recommendation: [Atomic Habits](https://jamesclear.com/atomic-habits) by James Clear.\n\n> \"You do not rise to the level of your goals. You fall to the level of your systems.\"",
+    "createdAt": "2025-01-20T08:30:00Z",
+    "threadId": null,
+    "images": []
+  }
+]
