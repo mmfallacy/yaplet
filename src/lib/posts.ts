@@ -1,4 +1,3 @@
-import matter from "gray-matter";
 import { Post, Thread, PostWithThread } from "@/types/post";
 
 interface Manifest {
@@ -8,6 +7,78 @@ interface Manifest {
 
 let postsCache: Post[] | null = null;
 let threadsCache: Thread[] | null = null;
+
+// Simple frontmatter parser (browser-compatible, no Node.js Buffer needed)
+function parseFrontmatter(content: string): { data: Record<string, unknown>; content: string } {
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/;
+  const match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    return { data: {}, content: content.trim() };
+  }
+  
+  const [, frontmatterStr, body] = match;
+  const data: Record<string, unknown> = {};
+  
+  // Parse YAML-like frontmatter (simple key: value pairs and arrays)
+  const lines = frontmatterStr.split('\n');
+  let currentKey = '';
+  let currentArray: string[] = [];
+  let inArray = false;
+  
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    
+    // Check if it's an array item
+    if (trimmed.startsWith('- ')) {
+      if (inArray) {
+        currentArray.push(trimmed.slice(2).trim().replace(/^["']|["']$/g, ''));
+      }
+      continue;
+    }
+    
+    // Save previous array if we were in one
+    if (inArray && currentKey) {
+      data[currentKey] = currentArray;
+      inArray = false;
+      currentArray = [];
+    }
+    
+    // Parse key: value
+    const colonIndex = trimmed.indexOf(':');
+    if (colonIndex > 0) {
+      const key = trimmed.slice(0, colonIndex).trim();
+      const value = trimmed.slice(colonIndex + 1).trim();
+      
+      if (value === '' || value === '[]') {
+        // Empty value or empty array - might be start of array
+        currentKey = key;
+        inArray = true;
+        currentArray = [];
+        if (value === '[]') {
+          data[key] = [];
+          inArray = false;
+        }
+      } else {
+        // Regular value
+        let parsedValue: unknown = value.replace(/^["']|["']$/g, '');
+        // Try to parse numbers
+        if (!isNaN(Number(parsedValue)) && parsedValue !== '') {
+          parsedValue = Number(parsedValue);
+        }
+        data[key] = parsedValue;
+      }
+    }
+  }
+  
+  // Don't forget the last array
+  if (inArray && currentKey) {
+    data[currentKey] = currentArray;
+  }
+  
+  return { data, content: body.trim() };
+}
 
 async function fetchMarkdownFile(path: string): Promise<string> {
   const response = await fetch(path);
@@ -19,15 +90,15 @@ async function parseMarkdownPost(
   content: string,
   threadId: string | null = null
 ): Promise<Post> {
-  const { data, content: body } = matter(content);
+  const { data, content: body } = parseFrontmatter(content);
   return {
-    id: data.id,
+    id: data.id as string,
     content: body.trim(),
-    createdAt: data.createdAt,
+    createdAt: data.createdAt as string,
     threadId,
-    threadOrder: data.threadOrder,
-    images: data.images || [],
-    likes: data.likes || 0,
+    threadOrder: data.threadOrder as number | undefined,
+    images: (data.images as string[]) || [],
+    likes: (data.likes as number) || 0,
   };
 }
 
