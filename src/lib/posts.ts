@@ -1,38 +1,91 @@
+import matter from "gray-matter";
 import { Post, Thread, PostWithThread } from "@/types/post";
 
-const POSTS_URL = "/data/posts.json";
-const THREADS_URL = "/data/threads.json";
+interface Manifest {
+  standalone: string[];
+  threads: { id: string; posts: string[] }[];
+}
 
 let postsCache: Post[] | null = null;
 let threadsCache: Thread[] | null = null;
 
+async function fetchMarkdownFile(path: string): Promise<string> {
+  const response = await fetch(path);
+  if (!response.ok) throw new Error(`Failed to fetch ${path}`);
+  return response.text();
+}
+
+async function parseMarkdownPost(
+  content: string,
+  threadId: string | null = null
+): Promise<Post> {
+  const { data, content: body } = matter(content);
+  return {
+    id: data.id,
+    content: body.trim(),
+    createdAt: data.createdAt,
+    threadId,
+    threadOrder: data.threadOrder,
+    images: data.images || [],
+    likes: data.likes || 0,
+  };
+}
+
 export async function fetchPosts(): Promise<Post[]> {
   if (postsCache) return postsCache;
-  
-  const response = await fetch(POSTS_URL);
-  if (!response.ok) throw new Error("Failed to fetch posts");
-  
-  postsCache = await response.json();
-  return postsCache!;
+
+  const manifestRes = await fetch("/content/manifest.json");
+  const manifest: Manifest = await manifestRes.json();
+
+  const posts: Post[] = [];
+
+  // Fetch standalone posts
+  for (const filename of manifest.standalone) {
+    const md = await fetchMarkdownFile(`/content/standalone/${filename}`);
+    const post = await parseMarkdownPost(md, null);
+    posts.push(post);
+  }
+
+  // Fetch thread posts
+  for (const thread of manifest.threads) {
+    for (const filename of thread.posts) {
+      const md = await fetchMarkdownFile(
+        `/content/threads/${thread.id}/${filename}`
+      );
+      const post = await parseMarkdownPost(md, thread.id);
+      posts.push(post);
+    }
+  }
+
+  postsCache = posts;
+  return posts;
 }
 
 export async function fetchThreads(): Promise<Thread[]> {
   if (threadsCache) return threadsCache;
-  
-  const response = await fetch(THREADS_URL);
-  if (!response.ok) throw new Error("Failed to fetch threads");
-  
-  threadsCache = await response.json();
-  return threadsCache!;
+
+  const manifestRes = await fetch("/content/manifest.json");
+  const manifest: Manifest = await manifestRes.json();
+
+  const threads: Thread[] = [];
+
+  for (const threadInfo of manifest.threads) {
+    const metaRes = await fetch(`/content/threads/${threadInfo.id}/meta.json`);
+    const meta: Thread = await metaRes.json();
+    threads.push(meta);
+  }
+
+  threadsCache = threads;
+  return threads;
 }
 
 export async function getPostsWithThreads(): Promise<PostWithThread[]> {
   const [posts, threads] = await Promise.all([fetchPosts(), fetchThreads()]);
-  
+
   return posts.map((post) => ({
     ...post,
-    thread: post.threadId 
-      ? threads.find((t) => t.id === post.threadId) 
+    thread: post.threadId
+      ? threads.find((t) => t.id === post.threadId)
       : undefined,
   }));
 }
@@ -54,6 +107,13 @@ export async function getPostsByThreadId(threadId: string): Promise<Post[]> {
     .sort((a, b) => (a.threadOrder || 0) - (b.threadOrder || 0));
 }
 
+export async function getFirstPostByThreadId(
+  threadId: string
+): Promise<Post | null> {
+  const posts = await getPostsByThreadId(threadId);
+  return posts[0] || null;
+}
+
 export async function getFeedPosts(): Promise<PostWithThread[]> {
   const posts = await getPostsWithThreads();
   // Sort by date, newest first
@@ -62,9 +122,47 @@ export async function getFeedPosts(): Promise<PostWithThread[]> {
   );
 }
 
-export function searchPosts(posts: PostWithThread[], query: string): PostWithThread[] {
+// Get feed with threads collapsed (only first post shown)
+export async function getFeedPostsCollapsed(): Promise<PostWithThread[]> {
+  const allPosts = await getPostsWithThreads();
+  const seenThreads = new Set<string>();
+  const result: PostWithThread[] = [];
+
+  // Sort by date first
+  const sorted = allPosts.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  for (const post of sorted) {
+    if (post.threadId) {
+      // Only include first post of each thread
+      if (!seenThreads.has(post.threadId)) {
+        // Find the actual first post of the thread
+        const threadPosts = sorted
+          .filter((p) => p.threadId === post.threadId)
+          .sort((a, b) => (a.threadOrder || 0) - (b.threadOrder || 0));
+        if (threadPosts[0]) {
+          result.push(threadPosts[0]);
+          seenThreads.add(post.threadId);
+        }
+      }
+    } else {
+      result.push(post);
+    }
+  }
+
+  // Re-sort by date after collecting
+  return result.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
+export function searchPosts(
+  posts: PostWithThread[],
+  query: string
+): PostWithThread[] {
   if (!query.trim()) return posts;
-  
+
   const lowerQuery = query.toLowerCase();
   return posts.filter(
     (post) =>
@@ -108,7 +206,10 @@ export function formatDate(dateString: string): string {
 
 export const MAX_CHARS = 400;
 
-export function validateContent(content: string): { valid: boolean; error?: string } {
+export function validateContent(content: string): {
+  valid: boolean;
+  error?: string;
+} {
   if (!content.trim()) {
     return { valid: false, error: "Content cannot be empty" };
   }
