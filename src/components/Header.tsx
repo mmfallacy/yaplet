@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Leaf } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { SearchFilter } from "./SearchFilter";
+import { UserMenu } from "./UserMenu";
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
@@ -21,9 +22,10 @@ export function Header({ onSearch, showSearch = true }: HeaderProps) {
           </span>
         </Link>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {showSearch && onSearch && <SearchFilter onSearch={onSearch} />}
           <ThemeToggle />
+          <UserMenu />
         </div>
       </div>
     </header>

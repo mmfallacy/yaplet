@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MessageCircle } from "lucide-react";
+import { ChevronRight, MessageCircle } from "lucide-react";
 import { PostWithThread } from "@/types/post";
 import { formatDate } from "@/lib/posts";
 import { MarkdownRenderer } from "./MarkdownRenderer";
@@ -7,19 +7,13 @@ import { PostImages } from "./PostImages";
 import { PostActions } from "./PostActions";
 import { cn } from "@/lib/utils";
 
-interface PostCardProps {
+interface ThreadPreviewProps {
   post: PostWithThread;
-  showThreadLink?: boolean;
-  showActions?: boolean;
+  totalPosts: number;
   className?: string;
 }
 
-export function PostCard({ 
-  post, 
-  showThreadLink = true, 
-  showActions = true,
-  className 
-}: PostCardProps) {
+export function ThreadPreview({ post, totalPosts, className }: ThreadPreviewProps) {
   return (
     <article
       className={cn(
@@ -28,7 +22,7 @@ export function PostCard({
       )}
     >
       <div className="flex gap-3">
-        {/* Avatar placeholder - olive accent */}
+        {/* Avatar */}
         <div className="flex-shrink-0">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/20 flex items-center justify-center">
             <span className="text-primary font-medium text-sm sm:text-base">J</span>
@@ -45,17 +39,15 @@ export function PostCard({
             </time>
           </div>
 
-          {/* Thread badge */}
-          {showThreadLink && post.thread && (
+          {/* Thread badge - clickable */}
+          {post.thread && (
             <Link
               to={`/thread/${post.threadId}`}
               className="inline-flex items-center gap-1.5 mt-1.5 px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full hover:bg-primary/20 transition-colors"
             >
               <MessageCircle size={12} />
               <span>{post.thread.title}</span>
-              {post.threadOrder && (
-                <span className="text-primary/70">#{post.threadOrder}</span>
-              )}
+              <span className="text-primary/70">· {totalPosts} posts</span>
             </Link>
           )}
 
@@ -70,8 +62,17 @@ export function PostCard({
           )}
 
           {/* Actions */}
-          {showActions && (
-            <PostActions postId={post.id} initialLikes={post.likes} />
+          <PostActions postId={post.id} initialLikes={post.likes} />
+
+          {/* View thread link */}
+          {post.thread && totalPosts > 1 && (
+            <Link
+              to={`/thread/${post.threadId}`}
+              className="flex items-center gap-1 mt-3 text-sm text-primary hover:underline group"
+            >
+              <span>Show this thread</span>
+              <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+            </Link>
           )}
         </div>
       </div>

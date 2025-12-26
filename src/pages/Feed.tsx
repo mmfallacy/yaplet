@@ -1,19 +1,38 @@
 import { useState, useEffect, useMemo } from "react";
-import { getFeedPosts, searchPosts } from "@/lib/posts";
+import { getFeedPostsCollapsed, searchPosts, getPostsByThreadId } from "@/lib/posts";
 import { PostWithThread } from "@/types/post";
 import { Header } from "@/components/Header";
 import { PostCard } from "@/components/PostCard";
+import { ThreadPreview } from "@/components/ThreadPreview";
 import { Loader2 } from "lucide-react";
 
 export default function Feed() {
   const [posts, setPosts] = useState<PostWithThread[]>([]);
+  const [threadCounts, setThreadCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    getFeedPosts()
-      .then(setPosts)
-      .finally(() => setLoading(false));
+    const loadFeed = async () => {
+      try {
+        const feedPosts = await getFeedPostsCollapsed();
+        setPosts(feedPosts);
+        
+        // Get counts for each thread
+        const counts: Record<string, number> = {};
+        for (const post of feedPosts) {
+          if (post.threadId) {
+            const threadPosts = await getPostsByThreadId(post.threadId);
+            counts[post.threadId] = threadPosts.length;
+          }
+        }
+        setThreadCounts(counts);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadFeed();
   }, []);
 
   const filteredPosts = useMemo(() => {
@@ -41,9 +60,17 @@ export default function Feed() {
           </div>
         ) : (
           <div>
-            {filteredPosts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
+            {filteredPosts.map((post) => 
+              post.threadId ? (
+                <ThreadPreview 
+                  key={post.id} 
+                  post={post} 
+                  totalPosts={threadCounts[post.threadId] || 1}
+                />
+              ) : (
+                <PostCard key={post.id} post={post} />
+              )
+            )}
           </div>
         )}
       </main>

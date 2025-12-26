@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { getThreadById, getPostsByThreadId } from "@/lib/posts";
-import { Thread, Post } from "@/types/post";
+import { getThreadById, getPostsByThreadId, fetchThreads } from "@/lib/posts";
+import { Thread, Post, PostWithThread } from "@/types/post";
 import { Header } from "@/components/Header";
 import { PostCard } from "@/components/PostCard";
+import { CommentsSection } from "@/components/CommentsSection";
 import { Button } from "@/components/ui/button";
 
 export default function ThreadPage() {
@@ -85,7 +86,7 @@ export default function ThreadPage() {
                 </div>
               </div>
               <PostCard
-                post={{ ...post, thread: undefined }}
+                post={{ ...post, thread: undefined } as PostWithThread}
                 showThreadLink={false}
                 className="pl-14 sm:pl-16"
               />
@@ -96,6 +97,16 @@ export default function ThreadPage() {
         {posts.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             No posts in this thread yet.
+          </div>
+        )}
+
+        {/* Comments section for the thread */}
+        {posts.length > 0 && (
+          <div className="p-4 sm:p-5">
+            <CommentsSection 
+              postId={thread.id} 
+              comments={[]} 
+            />
           </div>
         )}
       </main>
