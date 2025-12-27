@@ -1,0 +1,13 @@
+{
+  "standalone": [
+    "post-001.md",
+    "post-004.md",
+    "post-006.md"
+  ],
+  "threads": [
+    {
+      "id": "thread-001",
+      "posts": ["post-1.md", "post-2.md", "post-3.md"]
+    }
+  ]
+}
