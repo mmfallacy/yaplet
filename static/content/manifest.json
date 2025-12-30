@@ -1,6 +1,4 @@
 {
-  "standalone": [
-  ],
-  "threads": [
-  ]
+  "standalone": ["example-post.md"],
+  "threads": ["example-thread", "learning-opencode"]
 }
