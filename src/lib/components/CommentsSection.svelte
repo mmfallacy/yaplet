@@ -6,7 +6,7 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { auth } from '$lib/hooks/auth.svelte';
 
-	let { postId, comments, onAddComment } = $props<{
+	let { comments, onAddComment } = $props<{
 		postId: string;
 		comments: Comment[];
 		onAddComment?: (content: string) => void;
