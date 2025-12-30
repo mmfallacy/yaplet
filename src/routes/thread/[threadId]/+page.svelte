@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import { getThreadById } from '$lib/thread';
 	import { getPostsByThreadId } from '$lib/post';
 	import type { Thread, Post } from '$lib/types';
@@ -38,13 +39,15 @@
 		{:else if !thread}
 			<div class="p-4 text-center">
 				<p class="text-muted-foreground">Thread not found.</p>
-				<a href="/" class="mt-2 inline-block text-primary hover:underline"> Back to home </a>
+				<a href={resolve('/')} class="mt-2 inline-block text-primary hover:underline">
+					Back to home
+				</a>
 			</div>
 		{:else}
 			<!-- Thread header -->
 			<div class="border-b border-border p-4">
 				<div class="flex items-center gap-3">
-					<Button.Root href="/" variant="ghost" size="icon" class="text-foreground">
+					<Button.Root href={resolve('/')} variant="ghost" size="icon" class="text-foreground">
 						<ArrowLeft size={20} />
 					</Button.Root>
 					<div>

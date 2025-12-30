@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import { cn } from '$lib/utils';
 
 	let {
@@ -16,9 +17,11 @@
 		[key: string]: any;
 	}>();
 
-	let isActive = $derived(page.url.pathname === href || (page.url.pathname.startsWith(href) && href !== '/'));
+	let isActive = $derived(
+		page.url.pathname === href || (page.url.pathname.startsWith(href) && href !== '/')
+	);
 </script>
 
-<a {href} class={cn(className, isActive && activeClass)} {...props}>
+<a href={resolve(href)} class={cn(className, isActive && activeClass)} {...props}>
 	{@render children?.()}
 </a>

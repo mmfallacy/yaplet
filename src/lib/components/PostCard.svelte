@@ -2,6 +2,7 @@
 	import { MessageCircle } from '@lucide/svelte';
 	import type { PostWithThread } from '$lib/types';
 	import { formatDate } from '$lib/utils';
+	import { resolve } from '$app/paths';
 	import MarkdownRenderer from './MarkdownRenderer.svelte';
 	import PostImages from './PostImages.svelte';
 	import PostActions from './PostActions.svelte';
@@ -49,7 +50,7 @@
 			<!-- Thread badge -->
 			{#if showThreadLink && post.thread}
 				<a
-					href={`/thread/${post.threadId}`}
+					href={resolve(`/thread/${post.threadId}`)}
 					class="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary transition-colors hover:bg-primary/20"
 				>
 					<MessageCircle size={12} />

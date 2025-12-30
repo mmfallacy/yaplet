@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Comment } from '$lib/types';
 	import { formatDate } from '$lib/utils';
+	import { resolve } from '$app/paths';
 	import * as Button from '$lib/components/ui/button';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { auth } from '$lib/hooks/auth.svelte';
@@ -63,7 +64,7 @@
 	{:else}
 		<div class="mb-4 rounded-lg bg-muted/50 p-3 text-center">
 			<p class="text-sm text-muted-foreground">
-				<a href="/login" class="text-primary hover:underline"> Sign in </a>
+				<a href={resolve('/login')} class="text-primary hover:underline"> Sign in </a>
 				to leave a comment
 			</p>
 		</div>
