@@ -71,11 +71,7 @@
 								{index + 1}
 							</div>
 						</div>
-						<PostCard
-							post={{ ...post, thread: undefined }}
-							showThreadLink={false}
-							class="pl-14 sm:pl-16"
-						/>
+						<PostCard post={{ ...post, thread: undefined }} class="pl-14 sm:pl-16" />
 					</div>
 				{/each}
 			</div>

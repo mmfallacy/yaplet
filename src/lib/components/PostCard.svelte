@@ -1,27 +1,19 @@
 <script lang="ts">
-	import { MessageCircle } from '@lucide/svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { PostWithThread } from '$lib/types';
-	import { formatDate } from '$lib/utils';
-	import { resolve } from '$app/paths';
 	import MarkdownRenderer from './MarkdownRenderer.svelte';
 	import PostImages from './PostImages.svelte';
 	import PostActions from './PostActions.svelte';
 	import Footnotes from './Footnotes.svelte';
+	import PostHeader from './PostHeader.svelte';
 	import { cn } from '$lib/utils';
-
-	const USERNAME = 'mmfallacy';
-	const GITHUB_LINK = 'https://www.github.com/mmfallacy';
-	const AVATAR = 'https://avatars.githubusercontent.com/u/31348500';
 
 	let {
 		post,
-		showThreadLink = true,
 		showActions = true,
 		class: className
 	} = $props<{
 		post: PostWithThread;
-		showThreadLink?: boolean;
 		showActions?: boolean;
 		class?: string;
 	}>();
@@ -80,56 +72,31 @@
 		className
 	)}
 >
-	<div class="flex gap-3">
-		<!-- Avatar placeholder - olive accent -->
-		<a class="flex-shrink-0" href={GITHUB_LINK}>
-			<img
-				class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 sm:h-12 sm:w-12"
-				alt={`${USERNAME}'s GitHub avatar'`}
-				src={AVATAR}
-			/>
-		</a>
+	<PostHeader
+		createdAt={post.createdAt}
+		threadTitle={post.thread?.title}
+		threadId={post.threadId}
+	/>
 
-		<div class="min-w-0 flex-1">
-			<!-- Header -->
-			<div class="flex flex-wrap items-center gap-2">
-				<a class="font-medium text-foreground" href={GITHUB_LINK}>{USERNAME}</a>
-				<span class="text-muted-foreground">·</span>
-				<time class="text-sm text-muted-foreground" datetime={post.createdAt}>
-					{formatDate(post.createdAt)}
-				</time>
-			</div>
-
-			<!-- Thread badge -->
-			{#if showThreadLink && post.thread}
-				<a
-					href={resolve(`/thread/${post.threadId}`)}
-					class="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary transition-colors hover:bg-primary/20"
-				>
-					<MessageCircle size={12} />
-					<span>{post.thread.title}</span>
-				</a>
-			{/if}
-
-			<!-- Content -->
-			<div class="mt-2 text-foreground">
-				<MarkdownRenderer content={processedContent} />
-			</div>
-
-			<!-- Footnotes -->
-			{#if post.footnotes && referencedFootnoteKeys.length > 0}
-				<Footnotes footnotes={post.footnotes} order={referencedFootnoteKeys} />
-			{/if}
-
-			<!-- Images -->
-			{#if post.images.length > 0}
-				<PostImages images={post.images} class="mt-3" />
-			{/if}
-
-			<!-- Actions -->
-			{#if showActions}
-				<PostActions postId={post.id} initialLikes={post.likes} />
-			{/if}
+	<div class="-mt-2 min-w-0 flex-1">
+		<!-- Content -->
+		<div class="mt-2 text-foreground">
+			<MarkdownRenderer content={processedContent} />
 		</div>
+
+		<!-- Footnotes -->
+		{#if post.footnotes && referencedFootnoteKeys.length > 0}
+			<Footnotes footnotes={post.footnotes} order={referencedFootnoteKeys} />
+		{/if}
+
+		<!-- Images -->
+		{#if post.images.length > 0}
+			<PostImages images={post.images} class="mt-3" />
+		{/if}
+
+		<!-- Actions -->
+		{#if showActions}
+			<PostActions postId={post.id} initialLikes={post.likes} />
+		{/if}
 	</div>
 </article>

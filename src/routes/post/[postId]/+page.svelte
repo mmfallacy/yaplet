@@ -68,7 +68,7 @@
 			</div>
 
 			<!-- Post -->
-			<PostCard {post} showThreadLink={true} />
+			<PostCard {post} />
 
 			<!-- Comments -->
 			<div class="p-4 sm:p-5">
