@@ -36,3 +36,8 @@ export interface User {
 	avatar?: string;
 	githubUsername?: string;
 }
+
+export interface Manifest {
+	standalone: string[];
+	threads: string[];
+}

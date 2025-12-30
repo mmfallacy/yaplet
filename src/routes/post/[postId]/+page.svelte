@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getPostById } from '$lib/posts';
-	import type { PostWithThread, Comment } from '$lib/types/post';
+	import { getPostById } from '$lib/post';
+	import type { PostWithThread, Comment } from '$lib/types';
 	import Header from '$lib/components/Header.svelte';
 	import PostCard from '$lib/components/PostCard.svelte';
 	import CommentsSection from '$lib/components/CommentsSection.svelte';
@@ -40,27 +40,27 @@
 	}
 </script>
 
-<div class="bg-background min-h-screen transition-colors">
+<div class="min-h-screen bg-background transition-colors">
 	<Header showSearch={false} />
 
-	<main class="border-border mx-auto min-h-screen max-w-2xl border-x">
+	<main class="mx-auto min-h-screen max-w-2xl border-x border-border">
 		{#if loading}
 			<div class="flex items-center justify-center py-12">
-				<LoaderCircle class="text-primary h-6 w-6 animate-spin" />
+				<LoaderCircle class="h-6 w-6 animate-spin text-primary" />
 			</div>
 		{:else if !post}
 			<div class="p-4 text-center">
 				<p class="text-muted-foreground">Post not found.</p>
-				<a href="/" class="text-primary mt-2 inline-block hover:underline"> Back to home </a>
+				<a href="/" class="mt-2 inline-block text-primary hover:underline"> Back to home </a>
 			</div>
 		{:else}
 			<!-- Header -->
-			<div class="border-border border-b p-4">
+			<div class="border-b border-border p-4">
 				<div class="flex items-center gap-3">
 					<Button.Root href="/" variant="ghost" size="icon" class="text-foreground">
 						<ArrowLeft size={20} />
 					</Button.Root>
-					<h1 class="text-foreground text-xl font-semibold">Post</h1>
+					<h1 class="text-xl font-semibold text-foreground">Post</h1>
 				</div>
 			</div>
 

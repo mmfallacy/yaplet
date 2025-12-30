@@ -1,15 +1,11 @@
 <script lang="ts">
-	import type { Comment } from '$lib/types/post';
-	import { formatDate } from '$lib/posts';
+	import type { Comment } from '$lib/types';
+	import { formatDate } from '$lib/utils';
 	import * as Button from '$lib/components/ui/button';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { auth } from '$lib/hooks/auth.svelte';
 
-	let {
-		postId,
-		comments,
-		onAddComment
-	} = $props<{
+	let { postId, comments, onAddComment } = $props<{
 		postId: string;
 		comments: Comment[];
 		onAddComment?: (content: string) => void;
@@ -30,8 +26,8 @@
 	}
 </script>
 
-<div class="border-border mt-4 border-t pt-4">
-	<h3 class="text-foreground mb-4 text-sm font-medium">
+<div class="mt-4 border-t border-border pt-4">
+	<h3 class="mb-4 text-sm font-medium text-foreground">
 		Comments ({comments.length})
 	</h3>
 
@@ -40,8 +36,8 @@
 		<form onsubmit={handleSubmit} class="mb-4">
 			<div class="flex gap-3">
 				<div class="flex-shrink-0">
-					<div class="bg-primary/20 flex h-8 w-8 items-center justify-center rounded-full">
-						<span class="text-primary text-xs font-medium">
+					<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20">
+						<span class="text-xs font-medium text-primary">
 							{auth.user?.name?.charAt(0) || 'U'}
 						</span>
 					</div>
@@ -50,11 +46,11 @@
 					<Textarea
 						bind:value={newComment}
 						placeholder="Write a comment..."
-						class="bg-muted/50 min-h-[80px] resize-none"
+						class="min-h-[80px] resize-none bg-muted/50"
 						maxlength={280}
 					/>
 					<div class="mt-2 flex items-center justify-between">
-						<span class="text-muted-foreground text-xs">
+						<span class="text-xs text-muted-foreground">
 							{newComment.length}/280
 						</span>
 						<Button.Root type="submit" size="sm" disabled={!newComment.trim() || isSubmitting}>
@@ -65,8 +61,8 @@
 			</div>
 		</form>
 	{:else}
-		<div class="bg-muted/50 mb-4 rounded-lg p-3 text-center">
-			<p class="text-muted-foreground text-sm">
+		<div class="mb-4 rounded-lg bg-muted/50 p-3 text-center">
+			<p class="text-sm text-muted-foreground">
 				<a href="/login" class="text-primary hover:underline"> Sign in </a>
 				to leave a comment
 			</p>
@@ -76,29 +72,29 @@
 	<!-- Comments list -->
 	<div class="space-y-4">
 		{#if comments.length === 0}
-			<p class="text-muted-foreground py-4 text-center text-sm">
+			<p class="py-4 text-center text-sm text-muted-foreground">
 				No comments yet. Be the first to comment!
 			</p>
 		{:else}
 			{#each comments as comment (comment.id)}
 				<div class="flex gap-3">
 					<div class="flex-shrink-0">
-						<div class="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
-							<span class="text-muted-foreground text-xs font-medium">
+						<div class="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+							<span class="text-xs font-medium text-muted-foreground">
 								{comment.userName.charAt(0)}
 							</span>
 						</div>
 					</div>
-					<div class="flex-1 min-w-0">
+					<div class="min-w-0 flex-1">
 						<div class="flex items-center gap-2">
-							<span class="text-foreground text-sm font-medium">
+							<span class="text-sm font-medium text-foreground">
 								{comment.userName}
 							</span>
-							<span class="text-muted-foreground text-xs">
+							<span class="text-xs text-muted-foreground">
 								{formatDate(comment.createdAt)}
 							</span>
 						</div>
-						<p class="text-foreground mt-1 text-sm">{comment.content}</p>
+						<p class="mt-1 text-sm text-foreground">{comment.content}</p>
 					</div>
 				</div>
 			{/each}

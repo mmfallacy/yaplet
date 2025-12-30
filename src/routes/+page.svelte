@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getFeedPostsCollapsed, searchPosts, getPostsByThreadId } from '$lib/posts';
-	import type { PostWithThread } from '$lib/types/post';
+	import { getFeedPostsCollapsed, searchPosts, getPostsByThreadId } from '$lib/post';
+	import type { PostWithThread } from '$lib/types';
 	import Header from '$lib/components/Header.svelte';
 	import PostCard from '$lib/components/PostCard.svelte';
 	import ThreadPreview from '$lib/components/ThreadPreview.svelte';
@@ -34,22 +34,22 @@
 	let filteredPosts = $derived(searchPosts(posts, searchQuery));
 </script>
 
-<div class="bg-background min-h-screen transition-colors">
+<div class="min-h-screen bg-background transition-colors">
 	<Header onSearch={(q) => (searchQuery = q)} />
 
-	<main class="border-border mx-auto min-h-screen max-w-2xl border-x">
+	<main class="mx-auto min-h-screen max-w-2xl border-x border-border">
 		<!-- Page title -->
-		<div class="border-border border-b p-4">
-			<h1 class="text-foreground text-xl font-semibold">Home</h1>
+		<div class="border-b border-border p-4">
+			<h1 class="text-xl font-semibold text-foreground">Home</h1>
 		</div>
 
 		<!-- Posts feed -->
 		{#if loading}
 			<div class="flex items-center justify-center py-12">
-				<LoaderCircle class="text-primary h-6 w-6 animate-spin" />
+				<LoaderCircle class="h-6 w-6 animate-spin text-primary" />
 			</div>
 		{:else if filteredPosts.length === 0}
-			<div class="text-muted-foreground py-12 text-center">
+			<div class="py-12 text-center text-muted-foreground">
 				{searchQuery ? 'No posts match your search.' : 'No posts yet.'}
 			</div>
 		{:else}

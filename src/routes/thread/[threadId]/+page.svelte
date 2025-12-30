@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { getThreadById, getPostsByThreadId } from '$lib/posts';
-	import type { Thread, Post, PostWithThread } from '$lib/types/post';
+	import { getThreadById } from '$lib/thread';
+	import { getPostsByThreadId } from '$lib/post';
+	import type { Thread, Post } from '$lib/types';
 	import Header from '$lib/components/Header.svelte';
 	import PostCard from '$lib/components/PostCard.svelte';
 	import CommentsSection from '$lib/components/CommentsSection.svelte';
@@ -27,43 +27,43 @@
 	});
 </script>
 
-<div class="bg-background min-h-screen transition-colors">
+<div class="min-h-screen bg-background transition-colors">
 	<Header showSearch={false} />
 
-	<main class="border-border mx-auto min-h-screen max-w-2xl border-x">
+	<main class="mx-auto min-h-screen max-w-2xl border-x border-border">
 		{#if loading}
 			<div class="flex items-center justify-center py-12">
-				<LoaderCircle class="text-primary h-6 w-6 animate-spin" />
+				<LoaderCircle class="h-6 w-6 animate-spin text-primary" />
 			</div>
 		{:else if !thread}
 			<div class="p-4 text-center">
 				<p class="text-muted-foreground">Thread not found.</p>
-				<a href="/" class="text-primary mt-2 inline-block hover:underline"> Back to home </a>
+				<a href="/" class="mt-2 inline-block text-primary hover:underline"> Back to home </a>
 			</div>
 		{:else}
 			<!-- Thread header -->
-			<div class="border-border border-b p-4">
+			<div class="border-b border-border p-4">
 				<div class="flex items-center gap-3">
 					<Button.Root href="/" variant="ghost" size="icon" class="text-foreground">
 						<ArrowLeft size={20} />
 					</Button.Root>
 					<div>
-						<h1 class="text-foreground text-xl font-semibold">{thread.title}</h1>
-						<p class="text-muted-foreground mt-0.5 text-sm">{thread.description}</p>
+						<h1 class="text-xl font-semibold text-foreground">{thread.title}</h1>
+						<p class="mt-0.5 text-sm text-muted-foreground">{thread.description}</p>
 					</div>
 				</div>
 			</div>
 
 			<div class="relative">
-				<div class="bg-primary/20 absolute bottom-0 left-[34px] top-0 w-0.5 sm:left-[38px]"></div>
+				<div class="absolute top-0 bottom-0 left-[34px] w-0.5 bg-primary/20 sm:left-[38px]"></div>
 
 				<!-- Thread posts -->
 				{#each posts as post, index (post.id)}
 					<div class="relative">
 						<!-- Thread number badge -->
-						<div class="absolute left-4 top-4 z-10 sm:left-5 sm:top-5">
+						<div class="absolute top-4 left-4 z-10 sm:top-5 sm:left-5">
 							<div
-								class="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium"
+								class="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground"
 							>
 								{index + 1}
 							</div>
@@ -78,7 +78,7 @@
 			</div>
 
 			{#if posts.length === 0}
-				<div class="text-muted-foreground py-12 text-center">No posts in this thread yet.</div>
+				<div class="py-12 text-center text-muted-foreground">No posts in this thread yet.</div>
 			{/if}
 
 			<!-- Comments section for the thread -->
