@@ -25,36 +25,38 @@
 		className
 	)}
 >
-	<PostHeader
-		createdAt={post.createdAt}
-		threadTitle={post.thread?.title}
-		threadId={post.threadId}
-		postCount={totalPosts}
-	/>
+	<div class="grid grid-cols-[auto_1fr] gap-x-3">
+		<PostHeader
+			createdAt={post.createdAt}
+			threadTitle={post.thread?.title}
+			threadId={post.threadId}
+			postCount={totalPosts}
+		/>
 
-	<div class="-mt-2 min-w-0 flex-1">
-		<!-- Content -->
-		<div class="mt-2 text-foreground">
-			<MarkdownRenderer content={post.content} />
+		<div class="col-start-2 min-w-0">
+			<!-- Content -->
+			<div class="mt-2 text-foreground">
+				<MarkdownRenderer content={post.content} />
+			</div>
+
+			<!-- Images -->
+			{#if post.images.length > 0}
+				<PostImages images={post.images} class="mt-3" />
+			{/if}
+
+			<!-- Actions -->
+			<PostActions postId={post.id} initialLikes={post.likes} />
+
+			<!-- View thread link -->
+			{#if post.thread && totalPosts > 1}
+				<a
+					href={resolve(`/thread/${post.threadId}`)}
+					class="group mt-3 flex items-center gap-1 text-sm text-primary hover:underline"
+				>
+					<span>Show this thread</span>
+					<ChevronRight size={16} class="transition-transform group-hover:translate-x-0.5" />
+				</a>
+			{/if}
 		</div>
-
-		<!-- Images -->
-		{#if post.images.length > 0}
-			<PostImages images={post.images} class="mt-3" />
-		{/if}
-
-		<!-- Actions -->
-		<PostActions postId={post.id} initialLikes={post.likes} />
-
-		<!-- View thread link -->
-		{#if post.thread && totalPosts > 1}
-			<a
-				href={resolve(`/thread/${post.threadId}`)}
-				class="group mt-3 flex items-center gap-1 text-sm text-primary hover:underline"
-			>
-				<span>Show this thread</span>
-				<ChevronRight size={16} class="transition-transform group-hover:translate-x-0.5" />
-			</a>
-		{/if}
 	</div>
 </article>

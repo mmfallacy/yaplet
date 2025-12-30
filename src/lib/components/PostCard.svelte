@@ -72,31 +72,33 @@
 		className
 	)}
 >
-	<PostHeader
-		createdAt={post.createdAt}
-		threadTitle={post.thread?.title}
-		threadId={post.threadId}
-	/>
+	<div class="grid grid-cols-[auto_1fr] gap-x-3">
+		<PostHeader
+			createdAt={post.createdAt}
+			threadTitle={post.thread?.title}
+			threadId={post.threadId}
+		/>
 
-	<div class="-mt-2 min-w-0 flex-1">
-		<!-- Content -->
-		<div class="mt-2 text-foreground">
-			<MarkdownRenderer content={processedContent} />
+		<div class="col-start-2 min-w-0">
+			<!-- Content -->
+			<div class="text-foreground">
+				<MarkdownRenderer content={processedContent} />
+			</div>
+
+			<!-- Footnotes -->
+			{#if post.footnotes && referencedFootnoteKeys.length > 0}
+				<Footnotes footnotes={post.footnotes} order={referencedFootnoteKeys} />
+			{/if}
+
+			<!-- Images -->
+			{#if post.images.length > 0}
+				<PostImages images={post.images} class="mt-3" />
+			{/if}
+
+			<!-- Actions -->
+			{#if showActions}
+				<PostActions postId={post.id} initialLikes={post.likes} />
+			{/if}
 		</div>
-
-		<!-- Footnotes -->
-		{#if post.footnotes && referencedFootnoteKeys.length > 0}
-			<Footnotes footnotes={post.footnotes} order={referencedFootnoteKeys} />
-		{/if}
-
-		<!-- Images -->
-		{#if post.images.length > 0}
-			<PostImages images={post.images} class="mt-3" />
-		{/if}
-
-		<!-- Actions -->
-		{#if showActions}
-			<PostActions postId={post.id} initialLikes={post.likes} />
-		{/if}
 	</div>
 </article>
