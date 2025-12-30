@@ -1,4 +1,4 @@
 {
   "standalone": ["welcome-to-yaplet.md"],
-  "threads": []
+  "threads": ["learning-opencode"]
 }
