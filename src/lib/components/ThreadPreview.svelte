@@ -25,7 +25,7 @@
 		className
 	)}
 >
-	<div class="grid grid-cols-[auto_1fr] gap-x-3">
+	<a href={resolve(`/thread/${post.threadId}`)} class="block grid grid-cols-[auto_1fr] gap-x-3">
 		<PostHeader
 			createdAt={post.createdAt}
 			threadTitle={post.thread?.title}
@@ -49,14 +49,11 @@
 
 			<!-- View thread link -->
 			{#if post.thread && totalPosts > 1}
-				<a
-					href={resolve(`/thread/${post.threadId}`)}
-					class="group mt-3 flex items-center gap-1 text-sm text-primary hover:underline"
-				>
+				<span class="group mt-3 flex items-center gap-1 text-sm text-primary">
 					<span>Show this thread</span>
 					<ChevronRight size={16} class="transition-transform group-hover:translate-x-0.5" />
-				</a>
+				</span>
 			{/if}
 		</div>
-	</div>
+	</a>
 </article>

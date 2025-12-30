@@ -44,7 +44,6 @@
 				</a>
 			</div>
 		{:else}
-			<!-- Thread header -->
 			<div class="border-b border-border p-4">
 				<div class="flex items-center gap-3">
 					<Button.Root href={resolve('/')} variant="ghost" size="icon" class="text-foreground">
@@ -57,21 +56,24 @@
 				</div>
 			</div>
 
-			<div class="relative">
-				<div class="absolute top-0 bottom-0 left-[34px] w-0.5 bg-primary/20 sm:left-[38px]"></div>
+			<div class="relative pl-2">
+				<div class="absolute top-0 bottom-0 left-6 w-0.5 bg-primary/20 sm:left-8"></div>
 
-				<!-- Thread posts -->
 				{#each posts as post, index (post.id)}
-					<div class="relative">
-						<!-- Thread number badge -->
-						<div class="absolute top-4 left-4 z-10 sm:top-5 sm:left-5">
+					<div class="relative grid grid-cols-[auto_1fr]">
+						<div
+							class="relative z-10 col-start-1 row-start-1 flex h-10 w-10 items-center justify-center sm:h-12 sm:w-12"
+						>
 							<div
 								class="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground"
 							>
 								{index + 1}
 							</div>
 						</div>
-						<PostCard post={{ ...post, thread: undefined }} class="pl-14 sm:pl-16" />
+
+						<div class="col-start-2 row-start-1">
+							<PostCard post={{ ...post, thread: undefined }} />
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -80,7 +82,6 @@
 				<div class="py-12 text-center text-muted-foreground">No posts in this thread yet.</div>
 			{/if}
 
-			<!-- Comments section for the thread -->
 			{#if posts.length > 0}
 				<div class="p-4 sm:p-5">
 					<CommentsSection postId={thread.id} comments={[]} />

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { PostWithThread } from '$lib/types';
+	import { resolve } from '$app/paths';
 	import MarkdownRenderer from './MarkdownRenderer.svelte';
 	import PostImages from './PostImages.svelte';
 	import PostActions from './PostActions.svelte';
@@ -72,7 +73,7 @@
 		className
 	)}
 >
-	<div class="grid grid-cols-[auto_1fr] gap-x-3">
+	<a href={resolve(`/post/${post.id}`)} class="block grid grid-cols-[auto_1fr] gap-x-3">
 		<PostHeader
 			createdAt={post.createdAt}
 			threadTitle={post.thread?.title}
@@ -100,5 +101,5 @@
 				<PostActions postId={post.id} initialLikes={post.likes} />
 			{/if}
 		</div>
-	</div>
+	</a>
 </article>
