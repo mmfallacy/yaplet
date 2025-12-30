@@ -1,4 +1,4 @@
 {
-  "standalone": ["example-post.md"],
-  "threads": ["example-thread", "learning-opencode"]
+  "standalone": ["welcome-to-yaplet.md"],
+  "threads": []
 }
