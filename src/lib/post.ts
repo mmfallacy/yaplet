@@ -80,7 +80,7 @@ export async function getFeedPostsCollapsed(): Promise<PostWithThread[]> {
 	const result: PostWithThread[] = [];
 
 	const sorted = allPosts.sort(
-		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+		(a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
 	);
 
 	for (const post of sorted) {
