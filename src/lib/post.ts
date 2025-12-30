@@ -61,9 +61,7 @@ export async function getPostById(id: string): Promise<PostWithThread | null> {
 
 export async function getPostsByThreadId(threadId: string): Promise<Post[]> {
 	const posts = await fetchPosts();
-	return posts
-		.filter((p) => p.threadId === threadId)
-		.sort((a, b) => (a.threadOrder || 0) - (b.threadOrder || 0));
+	return posts.filter((p) => p.threadId === threadId);
 }
 
 export async function getFirstPostByThreadId(threadId: string): Promise<Post | null> {
@@ -88,9 +86,7 @@ export async function getFeedPostsCollapsed(): Promise<PostWithThread[]> {
 	for (const post of sorted) {
 		if (post.threadId) {
 			if (!seenThreads.has(post.threadId)) {
-				const threadPosts = sorted
-					.filter((p) => p.threadId === post.threadId)
-					.sort((a, b) => (a.threadOrder || 0) - (b.threadOrder || 0));
+				const threadPosts = sorted.filter((p) => p.threadId === post.threadId);
 				if (threadPosts[0]) {
 					result.push(threadPosts[0]);
 					seenThreads.add(post.threadId);

@@ -3,7 +3,6 @@ export interface Post {
 	content: string;
 	createdAt: string;
 	threadId: string | null;
-	threadOrder?: number;
 	images: string[];
 	likes: number;
 }

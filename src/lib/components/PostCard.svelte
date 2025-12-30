@@ -55,9 +55,6 @@
 				>
 					<MessageCircle size={12} />
 					<span>{post.thread.title}</span>
-					{#if post.threadOrder}
-						<span class="text-primary/70">#{post.threadOrder}</span>
-					{/if}
 				</a>
 			{/if}
 

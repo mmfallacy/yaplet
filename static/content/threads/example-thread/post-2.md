@@ -1,6 +1,5 @@
 ---
 id: post-003
-threadOrder: 2
 createdAt: 2025-01-17T09:15:00Z
 images: []
 likes: 22

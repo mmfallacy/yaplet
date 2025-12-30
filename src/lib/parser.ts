@@ -87,7 +87,6 @@ export async function parseMarkdownPost(
 		content: body.trim(),
 		createdAt: data.createdAt as string,
 		threadId,
-		threadOrder: data.threadOrder as number | undefined,
 		images: (data.images as string[]) || [],
 		likes: (data.likes as number) || 0
 	};
