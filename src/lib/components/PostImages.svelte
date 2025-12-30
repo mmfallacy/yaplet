@@ -18,7 +18,7 @@
 
 {#if images.length > 0}
 	<div class={cn('grid gap-1 overflow-hidden rounded-xl', gridClass, className)}>
-		{#each images.slice(0, 4) as image, index}
+		{#each images.slice(0, 4) as image, index (image)}
 			<div
 				class={cn(
 					'relative aspect-video bg-muted',

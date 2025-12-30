@@ -53,9 +53,9 @@
 				</Button.Root>
 
 				<p class="text-center text-xs text-muted-foreground">
-					By signing in, you agree to our{' '}
-					<a href={resolve('/')} class="text-primary hover:underline"> Terms of Service </a>{' '}
-					and{' '}
+					By signing in, you agree to our &nbsp;
+					<a href={resolve('/')} class="text-primary hover:underline"> Terms of Service </a> &nbsp;
+					and &nbsp;
 					<a href={resolve('/')} class="text-primary hover:underline"> Privacy Policy </a>
 				</p>
 			</div>

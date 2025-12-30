@@ -35,5 +35,7 @@
 </script>
 
 <div class={cn('prose-journal', className)}>
+	<!-- renderedHtml is sanitized by DOMPurify prior to rendering -->
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html renderedHtml}
 </div>
