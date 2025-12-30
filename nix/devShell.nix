@@ -13,6 +13,7 @@ mkShell {
     vscode-langservers-extracted
     emmet-language-server
     tailwindcss-language-server
+    svelte-language-server
   ]
   ++ pkgs.lib.mapAttrsToList (k: v: pkgs.writeShellScriptBin k v) {
     pnpm = "corepack pnpm \$@";
