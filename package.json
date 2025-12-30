@@ -1,5 +1,5 @@
 {
-	"name": "svelte-migration",
+	"name": "yaplet",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -13,6 +13,7 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint ."
 	},
+	"main": "./build/index.js",
 	"devDependencies": {
 		"@eslint/compat": "^1.4.0",
 		"@eslint/js": "^9.39.1",
@@ -42,6 +43,7 @@
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.7.2",
 		"svelte": "^5.45.6",
+		"svelte-adapter-bun": "^1.0.1",
 		"svelte-check": "^4.3.4",
 		"svelte-sonner": "^1.0.7",
 		"sveltekit-superforms": "^2.28.1",
