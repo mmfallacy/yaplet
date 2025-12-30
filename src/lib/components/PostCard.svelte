@@ -10,6 +10,10 @@
 	import Footnotes from './Footnotes.svelte';
 	import { cn } from '$lib/utils';
 
+	const USERNAME = 'mmfallacy';
+	const GITHUB_LINK = 'https://www.github.com/mmfallacy';
+	const AVATAR = 'https://avatars.githubusercontent.com/u/31348500';
+
 	let {
 		post,
 		showThreadLink = true,
@@ -78,18 +82,18 @@
 >
 	<div class="flex gap-3">
 		<!-- Avatar placeholder - olive accent -->
-		<div class="flex-shrink-0">
-			<div
+		<a class="flex-shrink-0" href={GITHUB_LINK}>
+			<img
 				class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 sm:h-12 sm:w-12"
-			>
-				<span class="text-sm font-medium text-primary sm:text-base">J</span>
-			</div>
-		</div>
+				alt={`${USERNAME}'s GitHub avatar'`}
+				src={AVATAR}
+			/>
+		</a>
 
 		<div class="min-w-0 flex-1">
 			<!-- Header -->
 			<div class="flex flex-wrap items-center gap-2">
-				<span class="font-medium text-foreground">Journal</span>
+				<a class="font-medium text-foreground" href={GITHUB_LINK}>{USERNAME}</a>
 				<span class="text-muted-foreground">·</span>
 				<time class="text-sm text-muted-foreground" datetime={post.createdAt}>
 					{formatDate(post.createdAt)}

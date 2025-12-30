@@ -19,7 +19,7 @@
 			<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
 				<Leaf size={18} class="text-primary-foreground" />
 			</div>
-			<span class="hidden text-lg font-semibold text-foreground sm:block"> Journal </span>
+			<span class="hidden text-lg font-semibold text-foreground sm:block"> yaplet </span>
 		</a>
 
 		<div class="flex items-center gap-2">
