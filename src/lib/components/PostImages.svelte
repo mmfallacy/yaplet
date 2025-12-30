@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 
-	let {
-		images,
-		class: className
-	} = $props<{
+	let { images, class: className } = $props<{
 		images: string[];
 		class?: string;
 	}>();
@@ -24,7 +21,7 @@
 		{#each images.slice(0, 4) as image, index}
 			<div
 				class={cn(
-					'bg-muted relative aspect-video',
+					'relative aspect-video bg-muted',
 					images.length === 3 && index === 0 && 'row-span-2 aspect-square'
 				)}
 			>

@@ -8,7 +8,7 @@
 	variant="ghost"
 	size="icon"
 	onclick={() => theme.toggleTheme()}
-	class="text-muted-foreground hover:text-foreground hover:bg-muted"
+	class="text-muted-foreground hover:bg-muted hover:text-foreground"
 	aria-label={`Switch to ${theme.theme === 'dark' ? 'light' : 'dark'} mode`}
 >
 	{#if theme.theme === 'dark'}

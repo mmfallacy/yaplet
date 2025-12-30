@@ -15,8 +15,8 @@
 		<DropdownMenu.Trigger>
 			{#snippet child({ props })}
 				<Button.Root {...props} variant="ghost" size="icon" class="rounded-full">
-					<div class="bg-primary/20 flex h-8 w-8 items-center justify-center rounded-full">
-						<span class="text-primary text-sm font-medium">
+					<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20">
+						<span class="text-sm font-medium text-primary">
 							{auth.user?.name?.charAt(0) || 'U'}
 						</span>
 					</div>
@@ -25,13 +25,13 @@
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content align="end" class="w-48">
 			<div class="px-2 py-1.5">
-				<p class="text-foreground text-sm font-medium">{auth.user?.name}</p>
+				<p class="text-sm font-medium text-foreground">{auth.user?.name}</p>
 				{#if auth.user?.githubUsername}
-					<p class="text-muted-foreground text-xs">@{auth.user.githubUsername}</p>
+					<p class="text-xs text-muted-foreground">@{auth.user.githubUsername}</p>
 				{/if}
 			</div>
 			<DropdownMenu.Separator />
-			<DropdownMenu.Item onclick={() => auth.logout()} class="text-destructive cursor-pointer">
+			<DropdownMenu.Item onclick={() => auth.logout()} class="cursor-pointer text-destructive">
 				<LogOut size={16} class="mr-2" />
 				Sign out
 			</DropdownMenu.Item>

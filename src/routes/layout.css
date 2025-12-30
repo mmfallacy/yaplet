@@ -1,215 +1,217 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+	--font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+	--font-mono: 'IBM Plex Mono', monospace;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
 
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
 
-  --color-olive: var(--olive);
-  --color-olive-light: var(--olive-light);
-  --color-olive-muted: var(--olive-muted);
+	--color-olive: var(--olive);
+	--color-olive-light: var(--olive-light);
+	--color-olive-muted: var(--olive-muted);
 
-  --animate-fade-in: fade-in 0.3s ease-out;
+	--animate-fade-in: fade-in 0.3s ease-out;
 
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 }
 
 :root {
-  /* Light mode - warm off-white monochrome */
-  --background: hsl(40 20% 98%);
-  --foreground: hsl(40 10% 12%);
+	/* Light mode - warm off-white monochrome */
+	--background: hsl(40 20% 98%);
+	--foreground: hsl(40 10% 12%);
 
-  --card: hsl(40 15% 100%);
-  --card-foreground: hsl(40 10% 12%);
+	--card: hsl(40 15% 100%);
+	--card-foreground: hsl(40 10% 12%);
 
-  --popover: hsl(40 15% 100%);
-  --popover-foreground: hsl(40 10% 12%);
+	--popover: hsl(40 15% 100%);
+	--popover-foreground: hsl(40 10% 12%);
 
-  /* Primary is the olive green accent */
-  --primary: hsl(82 35% 35%);
-  --primary-foreground: hsl(40 20% 98%);
+	/* Primary is the olive green accent */
+	--primary: hsl(82 35% 35%);
+	--primary-foreground: hsl(40 20% 98%);
 
-  --secondary: hsl(40 10% 94%);
-  --secondary-foreground: hsl(40 10% 20%);
+	--secondary: hsl(40 10% 94%);
+	--secondary-foreground: hsl(40 10% 20%);
 
-  --muted: hsl(40 10% 92%);
-  --muted-foreground: hsl(40 8% 45%);
+	--muted: hsl(40 10% 92%);
+	--muted-foreground: hsl(40 8% 45%);
 
-  /* Accent is also olive green for highlights */
-  --accent: hsl(82 35% 35%);
-  --accent-foreground: hsl(40 20% 98%);
+	/* Accent is also olive green for highlights */
+	--accent: hsl(82 35% 35%);
+	--accent-foreground: hsl(40 20% 98%);
 
-  --destructive: hsl(0 65% 50%);
-  --destructive-foreground: hsl(40 20% 98%);
+	--destructive: hsl(0 65% 50%);
+	--destructive-foreground: hsl(40 20% 98%);
 
-  --border: hsl(40 10% 88%);
-  --input: hsl(40 10% 88%);
-  --ring: hsl(82 35% 35%);
+	--border: hsl(40 10% 88%);
+	--input: hsl(40 10% 88%);
+	--ring: hsl(82 35% 35%);
 
-  --radius: 0.75rem;
+	--radius: 0.75rem;
 
-  /* Custom tokens for the journal */
-  --olive: hsl(82 35% 35%);
-  --olive-light: hsl(82 25% 50%);
-  --olive-muted: hsl(82 15% 75%);
+	/* Custom tokens for the journal */
+	--olive: hsl(82 35% 35%);
+	--olive-light: hsl(82 25% 50%);
+	--olive-muted: hsl(82 15% 75%);
 }
 
 .dark {
-  /* Dark mode - deep charcoal monochrome */
-  --background: hsl(40 5% 8%);
-  --foreground: hsl(40 10% 92%);
+	/* Dark mode - deep charcoal monochrome */
+	--background: hsl(40 5% 8%);
+	--foreground: hsl(40 10% 92%);
 
-  --card: hsl(40 5% 11%);
-  --card-foreground: hsl(40 10% 92%);
+	--card: hsl(40 5% 11%);
+	--card-foreground: hsl(40 10% 92%);
 
-  --popover: hsl(40 5% 11%);
-  --popover-foreground: hsl(40 10% 92%);
+	--popover: hsl(40 5% 11%);
+	--popover-foreground: hsl(40 10% 92%);
 
-  /* Olive green accent - slightly brighter in dark mode */
-  --primary: hsl(82 40% 45%);
-  --primary-foreground: hsl(40 5% 8%);
+	/* Olive green accent - slightly brighter in dark mode */
+	--primary: hsl(82 40% 45%);
+	--primary-foreground: hsl(40 5% 8%);
 
-  --secondary: hsl(40 5% 16%);
-  --secondary-foreground: hsl(40 10% 88%);
+	--secondary: hsl(40 5% 16%);
+	--secondary-foreground: hsl(40 10% 88%);
 
-  --muted: hsl(40 5% 18%);
-  --muted-foreground: hsl(40 8% 55%);
+	--muted: hsl(40 5% 18%);
+	--muted-foreground: hsl(40 8% 55%);
 
-  --accent: hsl(82 40% 45%);
-  --accent-foreground: hsl(40 5% 8%);
+	--accent: hsl(82 40% 45%);
+	--accent-foreground: hsl(40 5% 8%);
 
-  --destructive: hsl(0 55% 40%);
-  --destructive-foreground: hsl(40 10% 92%);
+	--destructive: hsl(0 55% 40%);
+	--destructive-foreground: hsl(40 10% 92%);
 
-  --border: hsl(40 5% 20%);
-  --input: hsl(40 5% 20%);
-  --ring: hsl(82 40% 45%);
+	--border: hsl(40 5% 20%);
+	--input: hsl(40 5% 20%);
+	--ring: hsl(82 40% 45%);
 
-  /* Custom tokens for dark mode */
-  --olive: hsl(82 40% 45%);
-  --olive-light: hsl(82 35% 55%);
-  --olive-muted: hsl(82 20% 30%);
+	/* Custom tokens for dark mode */
+	--olive: hsl(82 40% 45%);
+	--olive-light: hsl(82 35% 55%);
+	--olive-muted: hsl(82 20% 30%);
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+	* {
+		@apply border-border;
+	}
 
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "kern" 1, "liga" 1;
-  }
+	body {
+		@apply bg-background text-foreground antialiased;
+		font-feature-settings:
+			'kern' 1,
+			'liga' 1;
+	}
 }
 
 /* Typography for markdown content */
 @layer components {
-  .prose-journal {
-    @apply text-foreground leading-relaxed;
-  }
+	.prose-journal {
+		@apply leading-relaxed text-foreground;
+	}
 
-  .prose-journal strong {
-    @apply font-semibold text-foreground;
-  }
+	.prose-journal strong {
+		@apply font-semibold text-foreground;
+	}
 
-  .prose-journal em {
-    @apply italic;
-  }
+	.prose-journal em {
+		@apply italic;
+	}
 
-  .prose-journal code {
-    @apply bg-muted text-foreground px-1.5 py-0.5 rounded text-sm font-mono;
-  }
+	.prose-journal code {
+		@apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground;
+	}
 
-  .prose-journal pre {
-    @apply bg-muted p-4 rounded-lg overflow-x-auto my-3;
-  }
+	.prose-journal pre {
+		@apply my-3 overflow-x-auto rounded-lg bg-muted p-4;
+	}
 
-  .prose-journal pre code {
-    @apply bg-transparent p-0;
-  }
+	.prose-journal pre code {
+		@apply bg-transparent p-0;
+	}
 
-  .prose-journal a {
-    @apply text-primary underline underline-offset-2 hover:text-primary/80 transition-colors;
-  }
+	.prose-journal a {
+		@apply text-primary underline underline-offset-2 transition-colors hover:text-primary/80;
+	}
 
-  .prose-journal table {
-    @apply w-full border-collapse my-3;
-  }
+	.prose-journal table {
+		@apply my-3 w-full border-collapse;
+	}
 
-  .prose-journal th,
-  .prose-journal td {
-    @apply border border-border px-3 py-2 text-left;
-  }
+	.prose-journal th,
+	.prose-journal td {
+		@apply border border-border px-3 py-2 text-left;
+	}
 
-  .prose-journal th {
-    @apply bg-muted font-medium;
-  }
+	.prose-journal th {
+		@apply bg-muted font-medium;
+	}
 
-  .prose-journal img {
-    @apply rounded-lg max-w-full h-auto;
-  }
+	.prose-journal img {
+		@apply h-auto max-w-full rounded-lg;
+	}
 
-  .prose-journal blockquote {
-    @apply border-l-4 border-primary pl-4 italic text-muted-foreground my-3;
-  }
+	.prose-journal blockquote {
+		@apply my-3 border-l-4 border-primary pl-4 text-muted-foreground italic;
+	}
 
-  .prose-journal ul,
-  .prose-journal ol {
-    @apply pl-6 my-2;
-  }
+	.prose-journal ul,
+	.prose-journal ol {
+		@apply my-2 pl-6;
+	}
 
-  .prose-journal li {
-    @apply my-1;
-  }
+	.prose-journal li {
+		@apply my-1;
+	}
 
-  .prose-journal ul {
-    @apply list-disc;
-  }
+	.prose-journal ul {
+		@apply list-disc;
+	}
 
-  .prose-journal ol {
-    @apply list-decimal;
-  }
+	.prose-journal ol {
+		@apply list-decimal;
+	}
 }
 
 /* Smooth transitions for theme switching */
 @layer utilities {
-  .transition-theme {
-    @apply transition-colors duration-300 ease-in-out;
-  }
+	.transition-theme {
+		@apply transition-colors duration-300 ease-in-out;
+	}
 }

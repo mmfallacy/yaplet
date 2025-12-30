@@ -4,10 +4,7 @@
 	import { browser } from '$app/environment';
 	import { cn } from '$lib/utils';
 
-	let {
-		content,
-		class: className
-	} = $props<{
+	let { content, class: className } = $props<{
 		content: string;
 		class?: string;
 	}>();

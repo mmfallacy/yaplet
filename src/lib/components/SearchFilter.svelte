@@ -4,10 +4,7 @@
 	import * as Button from '$lib/components/ui/button';
 	import { cn } from '$lib/utils';
 
-	let {
-		onSearch,
-		class: className
-	} = $props<{
+	let { onSearch, class: className } = $props<{
 		onSearch: (query: string) => void;
 		class?: string;
 	}>();
@@ -40,23 +37,20 @@
 			</Button.Root>
 		{:else}
 			<div class="relative flex-1">
-				<Search
-					size={18}
-					class="text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2"
-				/>
+				<Search size={18} class="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground" />
 				<Input.Root
 					type="text"
 					placeholder="Search posts..."
 					bind:value={query}
 					oninput={() => onSearch(query)}
-					class="bg-muted/50 border-border focus:bg-background pl-10 pr-10"
+					class="border-border bg-muted/50 pr-10 pl-10 focus:bg-background"
 					autofocus
 				/>
 				{#if query}
 					<button
 						type="button"
 						onclick={handleClear}
-						class="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+						class="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
 					>
 						<X size={16} />
 					</button>

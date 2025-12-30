@@ -49,7 +49,7 @@
 	<!-- Comments -->
 	<button
 		onclick={onCommentClick}
-		class="text-muted-foreground hover:text-primary group flex items-center gap-1.5 transition-colors"
+		class="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
 	>
 		<MessageCircle size={18} class="transition-transform group-hover:scale-110" />
 		<span class="text-sm">{commentCount}</span>
@@ -74,13 +74,13 @@
 	<div class="relative">
 		<button
 			onclick={handleShare}
-			class="text-muted-foreground hover:text-primary group flex items-center gap-1.5 transition-colors"
+			class="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
 		>
 			<Share2 size={18} class="transition-transform group-hover:scale-110" />
 		</button>
 		{#if showShareToast}
 			<div
-				class="bg-foreground text-background absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded px-2 py-1 text-xs"
+				class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background"
 			>
 				Link copied!
 			</div>
