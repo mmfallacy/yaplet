@@ -5,6 +5,7 @@ export interface Post {
 	threadId: string | null;
 	images: string[];
 	likes: number;
+	footnotes?: Record<string, string>;
 }
 
 export interface Thread {

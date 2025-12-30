@@ -207,6 +207,18 @@
 	.prose-journal ol {
 		@apply list-decimal;
 	}
+
+	.prose-journal sup {
+		@apply inline-block;
+	}
+
+	.prose-journal .footnote-ref {
+		@apply ml-0.5 align-super text-xs text-primary no-underline;
+	}
+
+	.prose-journal .footnote-ref:hover {
+		@apply underline;
+	}
 }
 
 /* Smooth transitions for theme switching */

@@ -18,10 +18,28 @@ export function parseFrontmatter(content: string): {
 	let currentKey = '';
 	let currentArray: string[] = [];
 	let inArray = false;
+	let inFootnoteObject = false;
+	let footnoteKey = '';
+	let footnoteValue = '';
+	let inFootnoteValue = false;
 
 	for (const line of lines) {
 		const trimmed = line.trim();
 		if (!trimmed) continue;
+
+		if (inFootnoteValue) {
+			if (trimmed === '') {
+				inFootnoteValue = false;
+				if (currentKey && footnoteKey) {
+					(data[currentKey] as Record<string, string>)[footnoteKey] = footnoteValue.trim();
+				}
+				footnoteKey = '';
+				footnoteValue = '';
+				continue;
+			}
+			footnoteValue += line + '\n';
+			continue;
+		}
 
 		if (trimmed.startsWith('- ')) {
 			if (inArray) {
@@ -46,6 +64,27 @@ export function parseFrontmatter(content: string): {
 			const key = trimmed.slice(0, colonIndex).trim();
 			const value = trimmed.slice(colonIndex + 1).trim();
 
+			if (key === 'footnotes') {
+				currentKey = key;
+				inFootnoteObject = true;
+				data[key] = {};
+				continue;
+			}
+
+			if (inFootnoteObject && !inArray) {
+				if (value === '' || value === '[]') {
+					if (value === '[]') {
+						data[key] = {};
+					}
+					inFootnoteObject = false;
+				} else {
+					footnoteKey = key;
+					footnoteValue = value.replace(/^["']|["']$/g, '') + '\n';
+					inFootnoteValue = true;
+				}
+				continue;
+			}
+
 			if (value === '' || value === '[]') {
 				currentKey = key;
 				inArray = true;
@@ -62,6 +101,10 @@ export function parseFrontmatter(content: string): {
 				data[key] = parsedValue;
 			}
 		}
+	}
+
+	if (inFootnoteValue && footnoteKey && currentKey) {
+		(data[currentKey] as Record<string, string>)[footnoteKey] = footnoteValue.trim();
 	}
 
 	if (inArray && currentKey) {
@@ -88,6 +131,7 @@ export async function parseMarkdownPost(
 		createdAt: data.createdAt as string,
 		threadId,
 		images: (data.images as string[]) || [],
-		likes: (data.likes as number) || 0
+		likes: (data.likes as number) || 0,
+		footnotes: data.footnotes as Record<string, string> | undefined
 	};
 }
