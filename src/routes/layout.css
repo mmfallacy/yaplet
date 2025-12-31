@@ -5,7 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-	--font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+	--font-sans:
+		'IBM Plex Sans', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Noto Color Emoji', 'Twemoji Mozilla', 'Segoe UI Symbol';
 	--font-mono: 'IBM Plex Mono', monospace;
 
 	--radius-sm: calc(var(--radius) - 4px);
