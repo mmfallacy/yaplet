@@ -1,0 +1,74 @@
+import { GITHUB_PAT, CONTENT_BASE_URL } from '$env/static/private';
+
+interface CacheEntry {
+	content: string;
+	timestamp: number;
+}
+
+const CACHE_TTL = 8 * 60 * 60 * 1000;
+
+const cache = new Map<string, CacheEntry>();
+
+function getCacheKey(path: string): string {
+	return path;
+}
+
+function isExpired(entry: CacheEntry): boolean {
+	return Date.now() - entry.timestamp > CACHE_TTL;
+}
+
+export async function fetchContent(path: string): Promise<string> {
+	const cacheKey = getCacheKey(path);
+
+	const cached = cache.get(cacheKey);
+	if (cached && !isExpired(cached)) {
+		return cached.content;
+	}
+
+	const url = CONTENT_BASE_URL.replace('{path}', path);
+
+	const response = await fetch(url, {
+		headers: {
+			Authorization: `Bearer ${GITHUB_PAT}`,
+			Accept: 'application/vnd.github.raw'
+		}
+	});
+
+	if (!response.ok) {
+		if (cached) {
+			return cached.content;
+		}
+		throw new Error(`Failed to fetch ${path}: ${response.status} ${response.statusText}`);
+	}
+
+	const content = await response.text();
+
+	cache.set(cacheKey, {
+		content,
+		timestamp: Date.now()
+	});
+
+	return content;
+}
+
+export function invalidateCache(path?: string): void {
+	if (path) {
+		const cacheKey = getCacheKey(path);
+		cache.delete(cacheKey);
+	} else {
+		cache.clear();
+	}
+}
+
+export function getCacheStats(): { size: number; entries: string[] } {
+	const entries: string[] = [];
+	for (const [key, entry] of cache.entries()) {
+		if (!isExpired(entry)) {
+			entries.push(key);
+		}
+	}
+	return {
+		size: entries.length,
+		entries
+	};
+}
