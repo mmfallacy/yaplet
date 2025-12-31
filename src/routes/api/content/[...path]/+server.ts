@@ -14,7 +14,6 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(content, {
 			headers: {
 				'Content-Type': 'application/json',
-				'Cache-Control': 'public, max-age=28800'
 			}
 		});
 	} catch (error) {
