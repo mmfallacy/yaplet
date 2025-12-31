@@ -2,7 +2,7 @@ import { invalidateCache } from '$lib/server/github';
 import { WEBHOOK_SECRET } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { createHmac } from 'crypto';
+import { createHmac, timingSafeEqual } from 'crypto';
 
 function verifySignature(payload: string, signature: string | null): boolean {
 	if (!signature || !WEBHOOK_SECRET) {
@@ -10,8 +10,13 @@ function verifySignature(payload: string, signature: string | null): boolean {
 	}
 
 	const expectedSignature = createHmac('sha256', WEBHOOK_SECRET).update(payload).digest('hex');
+	console.log(expectedSignature);
 
-	return signature === expectedSignature || signature === `sha256=${expectedSignature}`;
+	const sigbuf = Buffer.from(signature)
+	return (
+		timingSafeEqual(sigbuf, Buffer.from(expectedSignature)) ||
+		timingSafeEqual(sigbuf, Buffer.from(`sha256=${expectedSignature}`))
+	);
 }
 
 export const POST: RequestHandler = async ({ request }) => {
