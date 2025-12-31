@@ -17,22 +17,27 @@ export function searchPosts(posts: PostWithThread[], query: string): PostWithThr
 export async function fetchPosts(): Promise<Post[]> {
 	if (postsCache) return postsCache;
 
-	const manifestRes = await fetch('/content/manifest.json');
+	const manifestRes = await fetch('/api/content/manifest.json');
+	if (!manifestRes.ok) {
+		throw new Error(
+			'Failed to load manifest. If content was recently updated, cache invalidation may be pending.'
+		);
+	}
 	const manifest = await manifestRes.json();
 
 	const posts: Post[] = [];
 
 	for (const filename of manifest.standalone) {
-		const md = await fetchMarkdownFile(`/content/standalone/${filename}`);
+		const md = await fetchMarkdownFile(`/api/content/standalone/${filename}`);
 		const post = await parseMarkdownPost(md, null);
 		posts.push(post);
 	}
 
 	for (const threadId of manifest.threads) {
-		const metaRes = await fetch(`/content/threads/${threadId}/meta.json`);
+		const metaRes = await fetch(`/api/content/threads/${threadId}/meta.json`);
 		const threadMeta = await metaRes.json();
 		for (const filename of threadMeta.posts) {
-			const md = await fetchMarkdownFile(`/content/threads/${threadId}/${filename}`);
+			const md = await fetchMarkdownFile(`/api/content/threads/${threadId}/${filename}`);
 			const post = await parseMarkdownPost(md, threadId);
 			posts.push(post);
 		}

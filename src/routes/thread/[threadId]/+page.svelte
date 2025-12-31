@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { getThreadById } from '$lib/thread';
@@ -15,16 +16,20 @@
 	let posts = $state<Post[]>([]);
 	let loading = $state(true);
 
-	$effect(() => {
+	onMount(async () => {
 		if (!threadId) return;
 
 		loading = true;
-		Promise.all([getThreadById(threadId), getPostsByThreadId(threadId)])
-			.then(([threadData, postsData]) => {
-				thread = threadData;
-				posts = postsData;
-			})
-			.finally(() => (loading = false));
+		try {
+			const [threadData, postsData] = await Promise.all([
+				getThreadById(threadId),
+				getPostsByThreadId(threadId)
+			]);
+			thread = threadData;
+			posts = postsData;
+		} finally {
+			loading = false;
+		}
 	});
 </script>
 

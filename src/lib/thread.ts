@@ -5,13 +5,18 @@ let threadsCache: Thread[] | null = null;
 export async function fetchThreads(): Promise<Thread[]> {
 	if (threadsCache) return threadsCache;
 
-	const manifestRes = await fetch('/content/manifest.json');
+	const manifestRes = await fetch('/api/content/manifest.json');
+	if (!manifestRes.ok) {
+		throw new Error(
+			'Failed to load manifest. If content was recently updated, cache invalidation may be pending.'
+		);
+	}
 	const manifest: Manifest = await manifestRes.json();
 
 	const threads: Thread[] = [];
 
 	for (const threadId of manifest.threads) {
-		const metaRes = await fetch(`/content/threads/${threadId}/meta.json`);
+		const metaRes = await fetch(`/api/content/threads/${threadId}/meta.json`);
 		const meta: Thread = await metaRes.json();
 		threads.push(meta);
 	}

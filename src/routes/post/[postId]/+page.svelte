@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { getPostById } from '$lib/post';
@@ -14,17 +15,17 @@
 	let comments = $state<Comment[]>([]);
 	let loading = $state(true);
 
-	$effect(() => {
+	onMount(async () => {
 		if (!postId) return;
 
 		loading = true;
-		getPostById(postId)
-			.then((postData) => {
-				post = postData;
-				// Stub: In a real app, fetch comments from API
-				comments = [];
-			})
-			.finally(() => (loading = false));
+		try {
+			const postData = await getPostById(postId);
+			post = postData;
+			comments = [];
+		} finally {
+			loading = false;
+		}
 	});
 
 	function handleAddComment(content: string) {

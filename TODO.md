@@ -43,26 +43,49 @@ WEBHOOK_SECRET=your-webhook-secret-here
 
 ### Phase 1: Environment & Configuration
 
-- [ ] Create/update .env.example with GITHUB_PAT, CONTENT_BASE_URL, WEBHOOK_SECRET
-- [ ] Document required GitHub PAT scope (repo or public_repo, read-only)
-- [ ] Document webhook setup process
+- [x] Create/update .env.example with GITHUB_PAT, CONTENT_BASE_URL, WEBHOOK_SECRET
+- [x] Document required GitHub PAT scope (repo or public_repo, read-only)
+- [x] Document webhook setup process
+
+#### GitHub PAT Scope Requirements
+
+The `GITHUB_PAT` (Personal Access Token) requires one of the following scopes:
+
+- **Private repositories:** `repo` scope (full control of private repositories)
+- **Public repositories only:** `public_repo` scope (read-only access to public repositories)
+
+Create a token at: https://github.com/settings/tokens
+
+The token should be read-only for security purposes - it only needs to read raw content files.
+
+#### Webhook Setup Process
+
+1. **Create GitHub Actions workflow** (see Phase 4) to trigger cache invalidation on content push
+
+2. **Configure webhook in your GitHub content repository:**
+   - Go to: Repository Settings > Webhooks > Add webhook
+   - Payload URL: `https://your-domain.com/api/webhook/cache`
+   - Content type: `application/json`
+   - Secret: Use the value of `WEBHOOK_SECRET` environment variable
+   - Events: Select "Just the push event"
+   - Optionally filter to only trigger on changes to the `content/` directory
 
 ### Phase 2: Server-Side Infrastructure
 
-- [ ] Create `src/lib/server/github.ts`:
+- [x] Create `src/lib/server/github.ts`:
   - GitHub content client with raw.githubusercontent.com
   - In-memory cache with 8-hour TTL (use Map with timestamps)
   - Cache invalidation method (clear all or by path)
   - Error handling with cache fallback
 
-- [ ] Create `src/routes/api/content/[...path]/+server.ts`:
+- [x] Create `src/routes/api/content/[...path]/+server.ts`:
   - Proxy endpoint that accepts `/api/content/*`
   - Forwards request to GitHub raw URL
   - Returns cached response if available and not expired
   - Caches successful responses
   - Handles errors gracefully
 
-- [ ] Create `src/routes/api/webhook/cache/+server.ts`:
+- [x] Create `src/routes/api/webhook/cache/+server.ts`:
   - Webhook endpoint for GitHub push events
   - Validates webhook signature (HMAC-SHA256)
   - Clears cache on valid push to content directory
@@ -70,13 +93,13 @@ WEBHOOK_SECRET=your-webhook-secret-here
 
 ### Phase 3: Frontend Integration
 
-- [ ] Update `src/lib/post.ts`:
+- [x] Update `src/lib/post.ts`:
   - Change `/content/manifest.json` to `/api/content/manifest.json`
   - Change `/content/standalone/*` to `/api/content/standalone/*`
   - Change `/content/threads/*` to `/api/content/threads/*`
   - Add error handling with cache fallback message
 
-- [ ] Update `src/lib/thread.ts`:
+- [x] Update `src/lib/thread.ts`:
   - Change `/content/manifest.json` to `/api/content/manifest.json`
   - Change `/content/threads/*/meta.json` to `/api/content/threads/*/meta.json`
   - Add error handling with cache fallback message

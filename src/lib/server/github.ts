@@ -25,7 +25,8 @@ export async function fetchContent(path: string): Promise<string> {
 		return cached.content;
 	}
 
-	const url = CONTENT_BASE_URL.replace('{path}', path);
+	const url = new URL(path, CONTENT_BASE_URL);
+	console.log(url);
 
 	const response = await fetch(url, {
 		headers: {
