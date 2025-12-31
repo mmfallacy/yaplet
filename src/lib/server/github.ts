@@ -26,7 +26,6 @@ export async function fetchContent(path: string): Promise<string> {
 	}
 
 	const url = new URL(path, CONTENT_BASE_URL);
-	console.log(url);
 
 	const response = await fetch(url, {
 		headers: {
@@ -61,15 +60,19 @@ export function invalidateCache(path?: string): void {
 	}
 }
 
-export function getCacheStats(): { size: number; entries: string[] } {
-	const entries: string[] = [];
+// Entries: path |-> timestamp in utc
+type Entries = Record<string, string>;
+export function getCacheStats(): { size: number; entries: Entries } {
+	const entries: Entries = {};
+	let c = 0;
 	for (const [key, entry] of cache.entries()) {
 		if (!isExpired(entry)) {
-			entries.push(key);
+			c += 1;
+			entries[key] = new Date(entry.timestamp).toISOString();
 		}
 	}
 	return {
-		size: entries.length,
+		size: c,
 		entries
 	};
 }
