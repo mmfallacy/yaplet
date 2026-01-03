@@ -1,4 +1,4 @@
-import { betterAuth } from 'better-auth';
+import { betterAuth, type BetterAuthOptions } from 'better-auth';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
 import {
@@ -8,29 +8,51 @@ import {
 	GITHUB_CLIENT_ID,
 	GITLAB_ISSUER
 } from '$env/static/private';
+import { customSession } from 'better-auth/plugins';
 
-export const auth = betterAuth({
+const options = {
 	socialProviders: {
 		github: {
 			clientId: GITHUB_CLIENT_ID,
-			clientSecret: GITHUB_CLIENT_SECRET
+			clientSecret: GITHUB_CLIENT_SECRET,
+			async mapProfileToUser(profile) {
+				return {
+					username: profile.login
+				};
+			},
+			overrideUserInfoOnSignIn: true
 		},
 		gitlab: {
 			clientId: GITLAB_CLIENT_ID,
 			clientSecret: GITLAB_CLIENT_SECRET,
-			issuer: GITLAB_ISSUER || 'https://gitlab.com'
+			issuer: GITLAB_ISSUER || 'https://gitlab.com',
+			async mapProfileToUser(profile) {
+				return {
+					username: profile.username
+				};
+			}
 		}
 	},
-	session: {
-		cookieCache: {
-			enabled: true,
-			maxAge: 7 * 24 * 60 * 60,
-			strategy: 'jwe'
+	plugins: [sveltekitCookies(getRequestEvent)],
+	user: {
+		additionalFields: {
+			username: {
+				type: 'string',
+				required: true
+			}
 		}
-	},
-	account: {
-		storeStateStrategy: 'cookie',
-		storeAccountCookie: true
-	},
-	plugins: [sveltekitCookies(getRequestEvent)]
+	}
+} satisfies BetterAuthOptions;
+
+export const auth = betterAuth({
+	...options,
+	plugins: [
+		...(options.plugins ?? []),
+		customSession(async function ({ user, session }) {
+			return {
+				user,
+				session
+			};
+		}, options)
+	]
 });
