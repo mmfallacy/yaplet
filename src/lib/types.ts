@@ -6,6 +6,7 @@ export interface Post {
 	images: string[];
 	likes: number;
 	footnotes?: Record<string, string>;
+	tags: string[];
 }
 
 export interface Thread {

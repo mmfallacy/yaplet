@@ -10,7 +10,8 @@ export function searchPosts(posts: PostWithThread[], query: string): PostWithThr
 	return posts.filter(
 		(post) =>
 			post.content.toLowerCase().includes(lowerQuery) ||
-			post.thread?.title.toLowerCase().includes(lowerQuery)
+			post.thread?.title.toLowerCase().includes(lowerQuery) ||
+			post.tags.some((tag) => tag.toLowerCase().includes(lowerQuery))
 	);
 }
 
