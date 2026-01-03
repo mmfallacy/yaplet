@@ -5,9 +5,6 @@
 	import { authClient } from '$lib/client';
 
 	const session = authClient.useSession;
-	$effect(() => {
-		console.log($session.data);
-	});
 </script>
 
 {#if !$session.data}

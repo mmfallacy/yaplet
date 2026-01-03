@@ -16,7 +16,6 @@
 		try {
 			const feedPosts = await getFeedPostsCollapsed();
 			posts = feedPosts;
-			console.log(posts);
 
 			// Get counts for each thread
 			const counts: Record<string, number> = {};
