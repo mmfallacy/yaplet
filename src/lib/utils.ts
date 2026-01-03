@@ -61,3 +61,8 @@ export function validateContent(content: string): {
 	}
 	return { valid: true };
 }
+
+export function normalizeMarkdownFilename(filename: string): string {
+	if (filename.endsWith('.md')) return filename;
+	return `${filename}.md`;
+}

@@ -1,5 +1,6 @@
 import type { Post, Thread, PostWithThread } from './types';
 import { z } from 'zod';
+import { normalizeMarkdownFilename } from './utils';
 
 let postsCache: Post[] | null = null;
 
@@ -66,7 +67,8 @@ export async function fetchPosts(): Promise<Post[]> {
 	const posts: Post[] = [];
 
 	for (const filename of manifest.standalone) {
-		const res = await fetch(`/api/content/standalone/${filename}`);
+		const normalized = normalizeMarkdownFilename(filename);
+		const res = await fetch(`/api/content/standalone/${normalized}`);
 		const data = MarkdownResponseSchema.parse(await res.json());
 		const post = mapToPost(data, null);
 		posts.push(post);
@@ -76,7 +78,8 @@ export async function fetchPosts(): Promise<Post[]> {
 		const metaRes = await fetch(`/api/content/threads/${threadId}/meta.json`);
 		const threadMeta = await metaRes.json();
 		for (const filename of threadMeta.posts) {
-			const res = await fetch(`/api/content/threads/${threadId}/${filename}`);
+			const normalized = normalizeMarkdownFilename(filename);
+			const res = await fetch(`/api/content/threads/${threadId}/${normalized}`);
 			const data = MarkdownResponseSchema.parse(await res.json());
 			const post = mapToPost(data, threadId);
 			posts.push(post);
