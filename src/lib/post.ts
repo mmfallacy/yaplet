@@ -1,5 +1,5 @@
 import type { Post, Thread, PostWithThread } from './types';
-import { fetchMarkdownFile, parseMarkdownPost } from './parser';
+import { z } from 'zod';
 
 let postsCache: Post[] | null = null;
 
@@ -13,6 +13,43 @@ export function searchPosts(posts: PostWithThread[], query: string): PostWithThr
 			post.thread?.title.toLowerCase().includes(lowerQuery) ||
 			post.tags.some((tag) => tag.toLowerCase().includes(lowerQuery))
 	);
+}
+
+const MarkdownResponseSchema = z.object({
+	data: z.record(z.string(), z.unknown()),
+	content: z.string()
+});
+
+const PostSchema = z.object({
+	id: z.string(),
+	content: z.string(),
+	createdAt: z.string(),
+	threadId: z.string().optional().nullable(),
+	images: z.array(z.string()).default([]),
+	likes: z.number().default(0),
+	footnotes: z.record(z.string(), z.string()).optional(),
+	tags: z.array(z.string()).default([])
+});
+
+function mapToPost(
+	markdown: z.infer<typeof MarkdownResponseSchema>,
+	threadId: string | null
+): Post {
+	const post = PostSchema.parse({
+		id: markdown.data.id,
+		content: markdown.content.trim(),
+		createdAt: markdown.data.createdAt,
+		threadId,
+		images: markdown.data.images,
+		likes: markdown.data.likes,
+		footnotes: markdown.data.footnotes,
+		tags: markdown.data.tags
+	});
+	return {
+		...post,
+		threadId: post.threadId ?? null,
+		footnotes: post.footnotes as Record<string, string> | undefined
+	};
 }
 
 export async function fetchPosts(): Promise<Post[]> {
@@ -29,8 +66,9 @@ export async function fetchPosts(): Promise<Post[]> {
 	const posts: Post[] = [];
 
 	for (const filename of manifest.standalone) {
-		const md = await fetchMarkdownFile(`/api/content/standalone/${filename}`);
-		const post = await parseMarkdownPost(md, null);
+		const res = await fetch(`/api/content/standalone/${filename}`);
+		const data = MarkdownResponseSchema.parse(await res.json());
+		const post = mapToPost(data, null);
 		posts.push(post);
 	}
 
@@ -38,8 +76,9 @@ export async function fetchPosts(): Promise<Post[]> {
 		const metaRes = await fetch(`/api/content/threads/${threadId}/meta.json`);
 		const threadMeta = await metaRes.json();
 		for (const filename of threadMeta.posts) {
-			const md = await fetchMarkdownFile(`/api/content/threads/${threadId}/${filename}`);
-			const post = await parseMarkdownPost(md, threadId);
+			const res = await fetch(`/api/content/threads/${threadId}/${filename}`);
+			const data = MarkdownResponseSchema.parse(await res.json());
+			const post = mapToPost(data, threadId);
 			posts.push(post);
 		}
 	}
