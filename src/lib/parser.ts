@@ -93,6 +93,13 @@ export function parseFrontmatter(content: string): {
 					data[key] = [];
 					inArray = false;
 				}
+			} else if (value.startsWith('[') && value.endsWith(']')) {
+				const inner = value.slice(1, -1);
+				const items = inner
+					.split(',')
+					.map((s) => s.trim().replace(/^["']|["']$/g, ''))
+					.filter((s) => s !== '');
+				data[key] = items;
 			} else {
 				let parsedValue: unknown = value.replace(/^["']|["']$/g, '');
 				if (!isNaN(Number(parsedValue)) && parsedValue !== '') {
@@ -132,6 +139,7 @@ export async function parseMarkdownPost(
 		threadId,
 		images: (data.images as string[]) || [],
 		likes: (data.likes as number) || 0,
-		footnotes: data.footnotes as Record<string, string> | undefined
+		footnotes: data.footnotes as Record<string, string> | undefined,
+		tags: (data.tags as string[]) || []
 	};
 }
