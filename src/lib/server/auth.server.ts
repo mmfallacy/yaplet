@@ -1,17 +1,24 @@
 import { betterAuth } from 'better-auth';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
+import {
+	GITHUB_CLIENT_SECRET,
+	GITLAB_CLIENT_SECRET,
+	GITLAB_CLIENT_ID,
+	GITHUB_CLIENT_ID,
+	GITLAB_ISSUER
+} from '$env/static/private';
 
 export const auth = betterAuth({
 	socialProviders: {
 		github: {
-			clientId: process.env.GITHUB_CLIENT_ID!,
-			clientSecret: process.env.GITHUB_CLIENT_SECRET!
+			clientId: GITHUB_CLIENT_ID,
+			clientSecret: GITHUB_CLIENT_SECRET
 		},
 		gitlab: {
-			clientId: process.env.GITLAB_CLIENT_ID!,
-			clientSecret: process.env.GITLAB_CLIENT_SECRET!,
-			issuer: process.env.GITLAB_ISSUER || 'https://gitlab.com'
+			clientId: GITLAB_CLIENT_ID,
+			clientSecret: GITLAB_CLIENT_SECRET,
+			issuer: GITLAB_ISSUER || 'https://gitlab.com'
 		}
 	},
 	session: {
