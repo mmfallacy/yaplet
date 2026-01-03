@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { getPostById } from '$lib/post';
@@ -15,14 +14,16 @@
 	let comments = $state<Comment[]>([]);
 	let loading = $state(true);
 
-	onMount(async () => {
+	$effect(() => {
 		if (!postId) return;
 
 		loading = true;
 		try {
-			const postData = await getPostById(postId);
-			post = postData;
-			comments = [];
+			(async function () {
+				const postData = await getPostById(postId);
+				post = postData;
+				comments = [];
+			})();
 		} finally {
 			loading = false;
 		}
