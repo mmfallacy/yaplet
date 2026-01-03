@@ -1,20 +1,28 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { Github, ArrowLeft } from '@lucide/svelte';
+	import { Github, Gitlab, ArrowLeft } from '@lucide/svelte';
 	import * as Button from '$lib/components/ui/button';
-	import { auth } from '$lib/hooks/auth.svelte';
+	import { authClient } from '$lib/client';
+
+	const session = authClient.useSession;
 
 	$effect(() => {
-		if (auth.isAuthenticated && !auth.isLoading) {
+		if ($session.data && !$session.isPending) {
 			goto(resolve('/'));
 		}
 	});
 
 	async function handleGitHubLogin() {
-		// Stub: In a real app, this would initiate GitHub OAuth flow
-		await auth.login();
-		goto(resolve('/'));
+		await authClient.signIn.social({
+			provider: 'github'
+		});
+	}
+
+	async function handleGitLabLogin() {
+		await authClient.signIn.social({
+			provider: 'gitlab'
+		});
 	}
 </script>
 
@@ -50,6 +58,14 @@
 				>
 					<Github size={20} />
 					Continue with GitHub
+				</Button.Root>
+				<Button.Root
+					onclick={handleGitLabLogin}
+					class="h-12 w-full gap-3 text-base"
+					variant="outline"
+				>
+					<Gitlab size={20} />
+					Continue with GitLab
 				</Button.Root>
 
 				<p class="text-center text-xs text-muted-foreground">
