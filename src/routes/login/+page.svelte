@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { Github, Gitlab, ArrowLeft } from '@lucide/svelte';
+	import { Github, Gitlab, ArrowLeft, Leaf } from '@lucide/svelte';
 	import * as Button from '$lib/components/ui/button';
 	import { authClient } from '$lib/client';
 
@@ -33,7 +33,7 @@
 			<Button.Root href={resolve('/')} variant="ghost" size="icon">
 				<ArrowLeft size={20} />
 			</Button.Root>
-			<span class="font-semibold text-foreground">Back to Journal</span>
+			<span class="font-semibold text-foreground">Back to yaplet</span>
 		</div>
 	</header>
 
@@ -42,9 +42,9 @@
 		<div class="w-full max-w-sm">
 			<div class="mb-8 text-center">
 				<div
-					class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20"
+					class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary"
 				>
-					<span class="text-2xl font-bold text-primary">J</span>
+					<Leaf size={32} class="text-primary-foreground" />
 				</div>
 				<h1 class="mb-2 text-2xl font-bold text-foreground">Welcome back</h1>
 				<p class="text-muted-foreground">Sign in to like posts and leave comments</p>
