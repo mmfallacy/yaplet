@@ -69,7 +69,7 @@ export function normalizeMarkdownFilename(filename: string): string {
 
 export function stopPropagation<T extends MouseEvent>(handler: (e: T) => void) {
 	return (e: T) => {
-		e.stopPropagation();
 		handler(e);
+		e.stopPropagation();
 	};
 }
