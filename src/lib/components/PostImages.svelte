@@ -32,7 +32,7 @@
 
 {#if images.length > 0}
 	<div class={cn('grid gap-1 overflow-hidden rounded-xl', gridClass, className)}>
-		{#each images.slice(0, 4) as image, index (image)}
+		{#each images.slice(0, 4) as image, index (`${image}-${index}`)}
 			{@const isSingle = images.length === 1}
 			<button
 				type="button"
