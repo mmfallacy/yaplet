@@ -1,9 +1,0 @@
-{
-  "id": "learning-opencode",
-  "title": "Learning Opencode",
-  "description": "Documenting my efforts to learn, incorporate, and tweak my development environemnt around Opencode and LLMs",
-  "createdAt": "2025-12-31T04:17:10Z",
-  "posts": [
-    "ai-coding.md"
-  ]
-}
