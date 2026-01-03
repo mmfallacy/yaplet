@@ -34,10 +34,11 @@ const PostSchema = z.object({
 
 function mapToPost(
 	markdown: z.infer<typeof MarkdownResponseSchema>,
-	threadId: string | null
+	threadId: string | null,
+	path: string
 ): Post {
 	const post = PostSchema.parse({
-		id: markdown.data.id,
+		id: path.replace(/\.md$/, ''),
 		content: markdown.content.trim(),
 		createdAt: markdown.data.createdAt,
 		threadId,
@@ -70,7 +71,7 @@ export async function fetchPosts(): Promise<Post[]> {
 		const normalized = normalizeMarkdownFilename(filename);
 		const res = await fetch(`/api/content/standalone/${normalized}`);
 		const data = MarkdownResponseSchema.parse(await res.json());
-		const post = mapToPost(data, null);
+		const post = mapToPost(data, null, `standalone/${normalized.replace(/\.md$/, '')}`);
 		posts.push(post);
 	}
 
@@ -81,7 +82,11 @@ export async function fetchPosts(): Promise<Post[]> {
 			const normalized = normalizeMarkdownFilename(filename);
 			const res = await fetch(`/api/content/threads/${threadId}/${normalized}`);
 			const data = MarkdownResponseSchema.parse(await res.json());
-			const post = mapToPost(data, threadId);
+			const post = mapToPost(
+				data,
+				threadId,
+				`threads/${threadId}/${normalized.replace(/\.md$/, '')}`
+			);
 			posts.push(post);
 		}
 	}
