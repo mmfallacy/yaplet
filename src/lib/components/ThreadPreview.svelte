@@ -54,6 +54,19 @@
 					<ChevronRight size={16} class="transition-transform group-hover:translate-x-0.5" />
 				</span>
 			{/if}
+
+			<!-- Tags -->
+			{#if post.tags.length > 0}
+				<div class="mt-3 flex flex-wrap gap-1.5">
+					{#each post.tags as tag (tag)}
+						<span
+							class="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+						>
+							#{tag}
+						</span>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</a>
 </article>
