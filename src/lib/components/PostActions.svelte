@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Heart, MessageCircle, Share2 } from '@lucide/svelte';
-	import { cn } from '$lib/utils';
+	import { cn, stopPropagation } from '$lib/utils';
 
 	let {
 		postId,
@@ -48,32 +48,28 @@
 <div class={cn('mt-3 flex items-center gap-6', className)}>
 	<!-- Comments -->
 	<button
-		onclick={onCommentClick}
-		class="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
+		disabled={true}
+		class="group flex items-center gap-1.5 text-muted-foreground disabled:text-shadow-muted-foreground"
 	>
-		<MessageCircle size={18} class="transition-transform group-hover:scale-110" />
+		<MessageCircle size={18} />
 		<span class="text-sm">{commentCount}</span>
 	</button>
 
 	<!-- Likes -->
 	<button
-		onclick={handleLike}
+		disabled={true}
 		class={cn(
-			'group flex items-center gap-1.5 transition-colors',
-			liked ? 'text-red-500' : 'text-muted-foreground hover:text-red-500'
+			'group flex items-center gap-1.5 text-muted-foreground transition-colors disabled:text-shadow-muted-foreground'
 		)}
 	>
-		<Heart
-			size={18}
-			class={cn('transition-transform group-hover:scale-110', liked && 'fill-current')}
-		/>
+		<Heart size={18} />
 		<span class="text-sm">{likes}</span>
 	</button>
 
 	<!-- Share -->
 	<div class="relative">
 		<button
-			onclick={handleShare}
+			onclick={stopPropagation(handleShare)}
 			class="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
 		>
 			<Share2 size={18} class="transition-transform group-hover:scale-110" />

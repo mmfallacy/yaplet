@@ -5,7 +5,7 @@
 	import XIcon from '@lucide/svelte/icons/x';
 	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
-	import { cn } from '$lib/utils';
+	import { cn, stopPropagation } from '$lib/utils';
 
 	let { images, class: className } = $props<{
 		images: string[];
@@ -32,29 +32,27 @@
 		return image.startsWith('http') ? image : resolve(`/api/content/images/${image}`);
 	}
 
-	function handleClose() {
-		selectedIndex = null;
-	}
-
-	function handleNext(e: MouseEvent) {
-		e.stopPropagation();
+	function handleNext() {
 		if (hasNext && selectedIndex !== null) {
 			selectedIndex++;
 		}
 	}
 
-	function handlePrev(e: MouseEvent) {
-		e.stopPropagation();
+	function handlePrev() {
 		if (hasPrev && selectedIndex !== null) {
 			selectedIndex--;
 		}
 	}
 
+	function handleClose() {
+		selectedIndex = null;
+	}
+
 	function handleKeydown(e: KeyboardEvent) {
 		if (e.key === 'ArrowRight' && hasNext) {
-			handleNext(e as unknown as MouseEvent);
+			handleNext();
 		} else if (e.key === 'ArrowLeft' && hasPrev) {
-			handlePrev(e as unknown as MouseEvent);
+			handlePrev();
 		}
 	}
 </script>
@@ -72,7 +70,7 @@
 					isSingle ? 'aspect-auto max-h-[400px] w-full' : 'aspect-video',
 					images.length === 3 && index === 0 && !isSingle && 'row-span-2 aspect-square'
 				)}
-				onclick={() => (selectedIndex = index)}
+				onclick={stopPropagation(() => (selectedIndex = index))}
 			>
 				<img
 					src={getImageSrc(image)}
@@ -97,7 +95,7 @@
 			<button
 				type="button"
 				class="absolute top-0 right-0 z-50 -translate-y-[calc(100%+16px)] rounded-full bg-black/30 p-2 text-white transition-colors hover:bg-black/50"
-				onclick={handleClose}
+				onclick={stopPropagation(handleClose)}
 			>
 				<XIcon class="size-6" />
 				<span class="sr-only">Close</span>
@@ -107,7 +105,7 @@
 				<button
 					type="button"
 					class="absolute top-1/2 left-0 z-50 -translate-x-[calc(100%+16px)] -translate-y-1/2 rounded-full bg-black/30 p-3 text-white transition-colors hover:bg-black/50"
-					onclick={handlePrev}
+					onclick={stopPropagation(handlePrev)}
 				>
 					<ChevronLeftIcon class="size-6" />
 					<span class="sr-only">Previous image</span>
@@ -124,7 +122,7 @@
 				<button
 					type="button"
 					class="absolute top-1/2 right-0 z-50 translate-x-[calc(100%+16px)] -translate-y-1/2 rounded-full bg-black/30 p-3 text-white transition-colors hover:bg-black/50"
-					onclick={handleNext}
+					onclick={stopPropagation(handleNext)}
 				>
 					<ChevronRightIcon class="size-6" />
 					<span class="sr-only">Next image</span>

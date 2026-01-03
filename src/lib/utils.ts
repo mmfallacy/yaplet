@@ -66,3 +66,10 @@ export function normalizeMarkdownFilename(filename: string): string {
 	if (filename.endsWith('.md')) return filename;
 	return `${filename}.md`;
 }
+
+export function stopPropagation<T extends MouseEvent>(handler: (e: T) => void) {
+	return (e: T) => {
+		e.stopPropagation();
+		handler(e);
+	};
+}
