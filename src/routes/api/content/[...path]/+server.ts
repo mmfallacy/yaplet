@@ -1,4 +1,4 @@
-import { fetchContent } from '$lib/server/github';
+import { fetchContent } from '$lib/server/github.server';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
