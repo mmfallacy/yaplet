@@ -11,6 +11,19 @@ function isMarkdownFile(path: string): boolean {
 	return path.endsWith('.md');
 }
 
+function getImageContentType(path: string): string | false {
+	switch (true) {
+		case path.endsWith('.png'):
+			return 'image/png';
+		case path.endsWith('.jpg') || path.endsWith('jpeg'):
+			return 'image/jpeg';
+		case path.endsWith('.gif'):
+			return 'image/gif';
+		default:
+			return false;
+	}
+}
+
 export const GET: RequestHandler = async ({ params }) => {
 	const path = params.path;
 
@@ -19,9 +32,10 @@ export const GET: RequestHandler = async ({ params }) => {
 	}
 
 	try {
-		const content = await fetchContent(path);
+		const res = await fetchContent(path);
 
 		if (isJsonFile(path)) {
+			const content = await res.text();
 			const parsed = JSON.parse(content);
 			return json(parsed, {
 				headers: {
@@ -31,6 +45,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		}
 
 		if (isMarkdownFile(path)) {
+			const content = await res.text();
 			const { data, content: body } = matter(content);
 			return json(
 				{ data, content: body },
@@ -41,6 +56,15 @@ export const GET: RequestHandler = async ({ params }) => {
 				}
 			);
 		}
+
+		const ct = getImageContentType(path);
+		if (ct)
+			return new Response(await res.arrayBuffer(), {
+				headers: {
+					// 'Content-Type': ct,
+					'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
+				}
+			});
 
 		return new Response(content, {
 			headers: {

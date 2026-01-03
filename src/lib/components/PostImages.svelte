@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { cn } from '$lib/utils';
 
 	let { images, class: className } = $props<{
@@ -26,7 +27,7 @@
 				)}
 			>
 				<img
-					src={image.startsWith('http') ? image : `/images/${image}`}
+					src={image.startsWith('http') ? image : resolve(`/api/content/images/${image}`)}
 					alt={`Post image ${index + 1}`}
 					class="h-full w-full object-cover"
 					loading="lazy"
