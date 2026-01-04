@@ -156,6 +156,32 @@
 		@apply italic;
 	}
 
+	.prose-journal u {
+		@apply underline decoration-border/50 underline-offset-2;
+	}
+
+	.prose-journal s,
+	.prose-journal del {
+		@apply text-muted-foreground/70 line-through;
+	}
+
+	.prose-journal ins {
+		@apply underline decoration-primary/50;
+	}
+
+	.prose-journal sub,
+	.prose-journal sup {
+		@apply text-xs;
+	}
+
+	.prose-journal sub {
+		@apply align-sub;
+	}
+
+	.prose-journal sup {
+		@apply align-super;
+	}
+
 	.prose-journal code {
 		@apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground;
 	}
@@ -220,6 +246,14 @@
 
 	.prose-journal .footnote-ref:hover {
 		@apply underline;
+	}
+
+	.prose-journal div {
+		@apply my-2;
+	}
+
+	.prose-journal span {
+		@apply inline;
 	}
 }
 

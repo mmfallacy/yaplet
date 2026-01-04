@@ -38,7 +38,47 @@
 		if (browser) {
 			return DOMPurify.sanitize(rawHtml, {
 				ADD_ATTR: ['target', 'rel'],
-				FORBID_TAGS: ['script', 'iframe', 'object', 'embed']
+				FORBID_TAGS: ['script', 'iframe', 'object', 'embed'],
+				ALLOWED_TAGS: [
+					'u',
+					's',
+					'del',
+					'ins',
+					'sub',
+					'sup',
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6',
+					'p',
+					'br',
+					'hr',
+					'strong',
+					'em',
+					'strong',
+					'b',
+					'i',
+					'code',
+					'pre',
+					'a',
+					'ul',
+					'ol',
+					'li',
+					'blockquote',
+					'figure',
+					'figcaption',
+					'table',
+					'thead',
+					'tbody',
+					'tr',
+					'th',
+					'td',
+					'img',
+					'div',
+					'span'
+				]
 			});
 		}
 		return rawHtml;
