@@ -25,7 +25,6 @@
 			{#each orderedEntries as [key, value], index (key)}
 				<li id="fn{index + 1}" class="pl-1">
 					<span class="text-foreground">{value}</span>
-					<a href="#ref{index + 1}" class="ml-2 text-primary hover:underline">↩</a>
 				</li>
 			{/each}
 		</ol>
