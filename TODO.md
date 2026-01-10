@@ -25,6 +25,21 @@
     - fetchThreads
     - fetch
 
+- manifest.json
+  - make manifest auto generated via a script. Include createdAt date to easily get recent X posts.
+
+- Flow:
+
+```py
+manifest = fetch_manifest() # under the hood, fetch(api/content/manifest.json) and zod parse
+
+posts = fetch_posts(manifest.standalone) # under the hood, calls fetch(api/content/standalone/*) for all posts in argument
+
+for thread in manifest.threads:
+  thread = fetch_thread() # under the hood, fetch(api/content/threads/*)
+  posts = fetch_posts(thread.posts)
+```
+
 - yaplet-content
   - ~~track contents onto database to enable sorted, or should i track it in an automatically generated file within the repo so upon clone so no need to have two sources of truth~~
   - use github api. leverage Repository Contents 304 not modified so no need to requery when posts arent modified.
@@ -38,3 +53,11 @@
 - [x] github.server.ts: add api based fetching
 - [-] github.server.ts: add checking etag for not modified
 - [ ] github.server.ts: add on disk caching
+
+- [ ] manifest.ts: fetchManifest(id)
+- [ ] yaplet-content: generate-manifest.ts: Generate manifests given repository.
+- [ ] posts.ts: fetchPost(id)
+- [ ] posts.ts: fetchPosts(id[])
+- [ ] threads.ts: fetchThread()
+
+- [ ]: run fetches on client side to offload compute on client's browser instead of railway
