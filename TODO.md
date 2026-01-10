@@ -26,11 +26,15 @@
     - fetch
 
 - yaplet-content
-  - track contents onto database to enable sorted, or should i track it in a automatically generated file within the repo so upon clone so no need to have two sources of truth
+  - ~~track contents onto database to enable sorted, or should i track it in an automatically generated file within the repo so upon clone so no need to have two sources of truth~~
+  - use github api. leverage Repository Contents 304 not modified so no need to requery when posts arent modified.
 
 ## TODO
 
 - [ ] Plan how to incrementally refactor this without breaking everything.
 - [ ] auth.svelte.ts: Add deprecation warning on import
-- [ ] post.ts: Extract schemas onto schema.ts
-- [ ] post.ts: Extract schemas onto schema.ts
+- [x] post.ts: Extract schemas onto schema.ts
+- [ ] enable prerenders
+- [x] github.server.ts: add api based fetching
+- [-] github.server.ts: add checking etag for not modified
+- [ ] github.server.ts: add on disk caching
