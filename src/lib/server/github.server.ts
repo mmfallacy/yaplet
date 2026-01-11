@@ -1,5 +1,6 @@
 import { GITHUB_PAT, CONTENT_BASE_URL } from '$env/static/private';
 import assert from 'node:assert';
+import z from 'zod';
 
 export async function fetchContent(path: string): Promise<Response> {
 	const url = new URL(path, CONTENT_BASE_URL);
@@ -22,14 +23,25 @@ export async function fetchContent(path: string): Promise<Response> {
 const API_CONTENT_BASE_URL = 'https://api.github.com/repos/mmfallacy/yaplet-content/contents/';
 const API_CONTENT_REF = 'main';
 
-const MemoryCache = new Map<string, { etag: string; data: Response }>();
+const MemoryCache = new Map<string, { etag: string; data: GhContentResponse }>();
 
-export async function fetchFromGithubApi(path: string): Promise<Response> {
+const GhContentResponseSchema = z.object({
+	name: z.string(),
+	path: z.string(),
+	sha: z.string(),
+	size: z.int(),
+	type: z.literal('file'),
+	content: z.string(),
+	encoding: z.literal('base64')
+});
+
+type GhContentResponse = z.infer<typeof GhContentResponseSchema>;
+
+export async function fetchFromGithubApi(path: string): Promise<GhContentResponse> {
 	const url = new URL(path, API_CONTENT_BASE_URL);
 	url.searchParams.set('ref', API_CONTENT_REF);
 
 	const entry = MemoryCache.get(path);
-	console.log(entry);
 
 	const response = await fetch(url, {
 		headers: {
@@ -39,9 +51,6 @@ export async function fetchFromGithubApi(path: string): Promise<Response> {
 			'If-None-Match': `${entry?.etag ?? 'v1'}`
 		}
 	});
-
-	console.log(`FETCH [${path}]: ${response.status} ${response.statusText}`);
-	console.log(response.headers);
 
 	if (response.status == 304) {
 		console.log('Matched Etag, using cache');
@@ -54,11 +63,18 @@ export async function fetchFromGithubApi(path: string): Promise<Response> {
 	}
 
 	const etag = response.headers.get('etag') || '';
-	console.log(etag);
+	const parsed = GhContentResponseSchema.safeParse(await response.json());
+
+	if (!parsed.success) {
+		throw new Error('GhContentResponse assertions failed');
+	}
+
+	const data = parsed.data;
+
 	MemoryCache.set(path, {
 		etag,
-		data: response
+		data
 	});
 
-	return response;
+	return data;
 }
