@@ -6,15 +6,17 @@ export const MarkdownResponseSchema = z.object({
 });
 
 export const PostSchema = z.object({
+	type: z.literal('standalone'),
 	id: z.string(),
 	content: z.string(),
 	createdAt: z.date(),
 	images: z.array(z.string()).optional(),
-	footnotes: z.record(z.string(), z.string()),
+	footnotes: z.record(z.string(), z.string()).optional(),
 	tags: z.array(z.string()).optional()
 });
 
 export const ThreadSchema = z.object({
+	type: z.literal('thread'),
 	id: z.string(),
 	title: z.string(),
 	description: z.string(),
