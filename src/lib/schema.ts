@@ -32,7 +32,7 @@ export const ManifestEntrySchema = z.discriminatedUnion('type', [
 		type: z.literal('thread'),
 		id: z.string(),
 		createdAt: z.string().datetime(),
-		post: z.array(z.string())
+		posts: z.array(z.string())
 	})
 ]);
 
