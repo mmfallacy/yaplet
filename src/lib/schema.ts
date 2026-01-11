@@ -21,7 +21,8 @@ export const ThreadSchema = z.object({
 	title: z.string(),
 	description: z.string(),
 	createdAt: z.date(),
-	posts: z.array(PostSchema)
+	preview: PostSchema,
+	posts: z.array(PostSchema.shape.id)
 });
 
 export const ManifestEntrySchema = z.discriminatedUnion('type', [
