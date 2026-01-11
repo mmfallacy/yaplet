@@ -22,10 +22,21 @@ export const ThreadSchema = z.object({
 	posts: z.array(PostSchema)
 });
 
-export const ManifestSchema = z.object({
-	standalone: z.array(PostSchema.shape.id),
-	threads: z.array(ThreadSchema.shape.id)
-});
+export const ManifestEntrySchema = z.discriminatedUnion('type', [
+	z.object({
+		type: z.literal('standalone'),
+		id: z.string(),
+		createdAt: z.string().datetime()
+	}),
+	z.object({
+		type: z.literal('thread'),
+		id: z.string(),
+		createdAt: z.string().datetime(),
+		post: z.array(z.string())
+	})
+]);
+
+export const ManifestSchema = z.array(ManifestEntrySchema);
 
 export const UserSchema = z.object({
 	id: z.string(),
