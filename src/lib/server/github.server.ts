@@ -21,7 +21,7 @@ export async function fetchContent(path: string): Promise<Response> {
 }
 
 const API_CONTENT_BASE_URL = 'https://api.github.com/repos/mmfallacy/yaplet-content/contents/';
-const API_CONTENT_REF = 'dev';
+const API_CONTENT_REF = 'v1';
 
 const MemoryCache = new Map<string, { etag: string; data: GhContentResponse }>();
 
