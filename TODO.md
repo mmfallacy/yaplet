@@ -45,6 +45,8 @@ for thread in manifest.threads:
   - use github api. leverage Repository Contents 304 not modified so no need to requery when posts arent modified.
   - why not place manifest.json into the postgres neon table so its easy to query. Link instead the github api url and make generate-manifest push to the db
 
+- Consider running errors as return values instead of exceptions. Where's the edge boundary though? (outermost layer in our handling s.t. it still runs exceptions)
+
 ## TODO
 
 - [ ] Plan how to incrementally refactor this without breaking everything.
