@@ -43,6 +43,7 @@ for thread in manifest.threads:
 - yaplet-content
   - ~~track contents onto database to enable sorted, or should i track it in an automatically generated file within the repo so upon clone so no need to have two sources of truth~~
   - use github api. leverage Repository Contents 304 not modified so no need to requery when posts arent modified.
+  - why not place manifest.json into the postgres neon table so its easy to query. Link instead the github api url and make generate-manifest push to the db
 
 ## TODO
 
@@ -54,10 +55,10 @@ for thread in manifest.threads:
 - [-] github.server.ts: add checking etag for not modified
 - [ ] github.server.ts: add on disk caching
 
-- [ ] manifest.ts: fetchManifest(id)
-- [ ] yaplet-content: generate-manifest.ts: Generate manifests given repository.
+- [x] manifest.ts: fetchManifest()
+- [x] yaplet-content: generate-manifest.ts: Generate manifests given repository.
 - [ ] posts.ts: fetchPost(id)
 - [ ] posts.ts: fetchPosts(id[])
 - [ ] threads.ts: fetchThread()
 
-- [ ]: run fetches on client side to offload compute on client's browser instead of railway
+- [ ] feed: get feed and respect limits and offsets.
