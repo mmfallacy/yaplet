@@ -9,7 +9,8 @@ export const GET: RequestHandler = async ({ params }) => {
 		const res = await getPostById(id);
 		assert(res.ok, `Cannot get post given id ${id}`);
 		return json(res);
-	} catch {
+	} catch (err) {
+		console.error(err);
 		return error(500, `Something went wrong fetching post ${id}`);
 	}
 };
