@@ -1,4 +1,4 @@
-import { ManifestSchema } from '$lib/schema';
+import { ManifestSchema } from '$lib/shared/schema';
 import { fetchFromGithubApi } from '$lib/server/github.server';
 
 function toDateMs(a: string) {

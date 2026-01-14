@@ -5,7 +5,7 @@ import {
 	PostSchema,
 	ThreadSchema,
 	UserSchema
-} from './schema';
+} from '$lib/shared/schema';
 import { z } from 'zod';
 
 export type MarkdownResponse = z.infer<typeof MarkdownResponseSchema>;

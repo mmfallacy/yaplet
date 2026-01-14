@@ -1,4 +1,4 @@
-import { PostSchema } from '$lib/schema';
+import { PostSchema } from '$lib/shared/schema';
 import { fetchFromGithubApi } from '$lib/server/github.server';
 import { getManifest } from '$lib/server/manifest.server';
 import { json, type RequestHandler } from '@sveltejs/kit';

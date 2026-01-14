@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { fetchFromGithubApi } from '$lib/server/github.server';
 import { normalizeMarkdownFilename } from '$lib/utils';
 import matter from 'gray-matter';
-import { PostSchema } from '$lib/schema';
+import { PostSchema } from '$lib/shared/schema';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const id = params.id;
