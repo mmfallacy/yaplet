@@ -19,3 +19,13 @@ export type Manifest = z.infer<typeof ManifestSchema>;
 export type UserSchema = z.infer<typeof UserSchema>;
 
 export type Comment = z.infer<typeof CommentSchema>;
+
+export type Result<T, E extends Error> =
+	| {
+			ok: true;
+			value: T;
+	  }
+	| {
+			ok: false;
+			error: E;
+	  };
