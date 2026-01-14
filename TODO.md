@@ -67,8 +67,8 @@ for thread in manifest.threads:
 - [x] yaplet-content: generate-manifest.ts: Generate manifests given repository.
 - [x] api/v1/post/[id]: fetchPost(id)
 - [x] api/v1/: fetchPosts(id[])
-- [ ] threads.ts: fetchThread()
+- [x] threads.ts: fetchThread()
 
-- [ ] feed: get feed and respect limits and offsets.
+- [x] feed: get feed and respect limits and offsets.
 
 k

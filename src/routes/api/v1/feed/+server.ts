@@ -1,10 +1,9 @@
 import { getManifest } from '$lib/server/manifest/getManifest';
-import { PostSchema } from '$lib/shared/schema';
+import { getPostById } from '$lib/server/post/getPostById';
+import { getThreadById } from '$lib/server/thread/getThreadById';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import assert from 'node:assert/strict';
-import matter from 'gray-matter';
 import z from 'zod/v4';
-import { getContent } from '$lib/server/github/repo';
 
 const QuerySchema = z.object({
 	offset: z.coerce.number().int().positive().default(0),
@@ -19,32 +18,29 @@ export const GET: RequestHandler = async function ({ url }) {
 		assert(result.ok, 'There was a problem ');
 		const manifest = result.value;
 
-		const mapped = manifest.map(async function (entry) {
+		const mapped = manifest.map(function (entry) {
 			switch (entry.type) {
-				case 'standalone': {
-					const res = await getContent(`content/standalone/${entry.id}.md`);
-					assert(res.ok, `Failed to fetch standalone post ${entry.id}`);
-					const post = Buffer.from(res.value.content, 'base64').toString();
-					const processed = matter(post);
-					const parsed = PostSchema.parse({
-						type: 'standalone',
-						id: entry.id,
-						content: processed.content,
-						...processed.data
-					});
-					return parsed;
-				}
+				case 'standalone':
+					return getPostById(entry.id);
 				case 'thread':
-					return Promise.reject({
-						reason: 'thread',
-						id: entry.id
-					});
+					return getThreadById(entry.id);
 				default:
 					throw new Error('unhandled manifest entry type');
 			}
 		});
+		const settled = await Promise.allSettled(mapped);
+		const unwrapped = settled.map(function (result) {
+			switch (result.status) {
+				case 'fulfilled':
+					return result.value;
+				case 'rejected':
+					return { ok: false, error: result.reason };
+				default:
+					throw new Error('Impossible Case');
+			}
+		});
 
-		return json(await Promise.allSettled(mapped));
+		return json(unwrapped);
 	} catch (err) {
 		assert(err instanceof Error, `unexpected error: ${String(err)}`);
 		return error(500, err);
