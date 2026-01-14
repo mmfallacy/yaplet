@@ -9,7 +9,7 @@ export const PostSchema = z.object({
 	type: z.literal('standalone'),
 	id: z.string(),
 	content: z.string(),
-	createdAt: z.date(),
+	createdAt: z.coerce.date(),
 	images: z.array(z.string()).optional(),
 	footnotes: z.record(z.string(), z.string()).optional(),
 	tags: z.array(z.string()).optional()
@@ -20,9 +20,13 @@ export const ThreadSchema = z.object({
 	id: z.string(),
 	title: z.string(),
 	description: z.string(),
-	createdAt: z.date(),
-	preview: PostSchema,
+	createdAt: z.coerce.date(),
 	posts: z.array(PostSchema.shape.id)
+});
+
+export const ThreadWithPreviewSchema = z.object({
+	...ThreadSchema.shape,
+	preview: PostSchema
 });
 
 export const ManifestEntrySchema = z.discriminatedUnion('type', [
