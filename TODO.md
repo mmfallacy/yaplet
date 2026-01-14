@@ -46,6 +46,10 @@ for thread in manifest.threads:
   - why not place manifest.json into the postgres neon table so its easy to query. Link instead the github api url and make generate-manifest push to the db
 
 - Consider running errors as return values instead of exceptions. Where's the edge boundary though? (outermost layer in our handling s.t. it still runs exceptions)
+- What if we do:
+  - +server.ts GET POST PUT etc. run errors as exceptions.
+  - internal $/lib/server/manifest.ts and $/lib/server/post.ts does error as values.
+  - Need a way to structure $/lib/server/\* properly.
 
 ## TODO
 
@@ -54,13 +58,17 @@ for thread in manifest.threads:
 - [x] post.ts: Extract schemas onto schema.ts
 - [ ] enable prerenders
 - [x] github.server.ts: add api based fetching
-- [-] github.server.ts: add checking etag for not modified
+- [x] github.server.ts: add checking etag for not modified
 - [ ] github.server.ts: add on disk caching
+- [x] errors as return values for features
+- [x] keep errors as exceptions for HTTP handlers
 
 - [x] manifest.ts: fetchManifest()
 - [x] yaplet-content: generate-manifest.ts: Generate manifests given repository.
-- [ ] posts.ts: fetchPost(id)
-- [ ] posts.ts: fetchPosts(id[])
+- [x] api/v1/post/[id]: fetchPost(id)
+- [x] api/v1/: fetchPosts(id[])
 - [ ] threads.ts: fetchThread()
 
 - [ ] feed: get feed and respect limits and offsets.
+
+k
