@@ -2,8 +2,11 @@ import type { Post, Result } from '$lib/shared/types';
 import { getPostById } from './getPostById';
 
 // Returns an array of Results
-export async function getPostByIds(ids: string[]): Promise<Result<Post, Error>[]> {
-	const res = await Promise.allSettled(ids.map((id) => getPostById(id)));
+export async function getPostByIds(
+	ids: string[],
+	basePath?: string
+): Promise<Result<Post, Error>[]> {
+	const res = await Promise.allSettled(ids.map((id) => getPostById(id, basePath)));
 	return res.map(function (result) {
 		switch (result.status) {
 			case 'fulfilled':

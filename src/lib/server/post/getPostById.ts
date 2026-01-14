@@ -1,11 +1,15 @@
-import { normalizeMarkdownFilename } from '$lib/utils';
+import { joinPaths, normalizeMarkdownFilename } from '$lib/utils';
 import matter from 'gray-matter';
 import { getContent } from '../github/repo';
 import { PostSchema } from '$lib/shared/schema';
 import type { Post, Result } from '$lib/shared/types';
 
-export async function getPostById(id: string): Promise<Result<Post, Error>> {
-	const result = await getContent(`content/standalone/${normalizeMarkdownFilename(id)}`);
+const POST_BASE_PATH_DEFAULT = 'content/standalone/';
+
+export async function getPostById(id: string, basePath?: string): Promise<Result<Post, Error>> {
+	const resolvedPath = joinPaths(basePath ?? POST_BASE_PATH_DEFAULT, normalizeMarkdownFilename(id));
+
+	const result = await getContent(resolvedPath);
 	if (!result.ok)
 		return {
 			ok: false,
