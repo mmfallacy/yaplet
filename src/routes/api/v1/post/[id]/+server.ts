@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getPostById } from '$lib/server/post/getPost';
+import { getPostById } from '$lib/server/post/getPostById';
 import assert from 'node:assert/strict';
 
 export const GET: RequestHandler = async ({ params }) => {
