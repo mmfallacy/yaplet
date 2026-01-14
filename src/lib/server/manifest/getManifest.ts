@@ -1,14 +1,19 @@
 import { ManifestSchema } from '$lib/shared/schema';
-import { fetchFromGithubApi } from '$lib/server/github.server';
+import type { Manifest, Result } from '$lib/shared/types';
+import { getContent } from '../github/repo';
 
 function toDateMs(a: string) {
 	return new Date(a).getTime();
 }
 
-export async function getManifest(offset: number, limit?: number) {
-	const data = await fetchFromGithubApi('content/manifest.v1.json');
+export async function getManifest(
+	offset: number,
+	limit?: number
+): Promise<Result<Manifest, Error>> {
+	const result = await getContent('content/manifest.v1.json');
+	if (!result.ok) return { ok: false, error: new Error('Failed to get manifest from repository') };
 
-	const decoded = Buffer.from(data.content, 'base64').toString('utf-8');
+	const decoded = Buffer.from(result.value.content, 'base64').toString('utf-8');
 	const parsed = JSON.parse(decoded);
 	const manifest = ManifestSchema.parse(parsed);
 
@@ -18,9 +23,10 @@ export async function getManifest(offset: number, limit?: number) {
 
 	// Sort Descending (i.e. latest post first)
 	// NOTE: Array.prototype.sort returns reference to same array.
+	// Return only slice.
 	const slice = manifest
 		.sort((a, b) => toDateMs(b.createdAt) - toDateMs(a.createdAt))
 		.slice(offset, end);
 
-	return slice;
+	return { ok: true, value: slice };
 }

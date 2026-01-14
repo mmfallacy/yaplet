@@ -1,5 +1,6 @@
 import {
 	CommentSchema,
+	ManifestEntrySchema,
 	ManifestSchema,
 	MarkdownResponseSchema,
 	PostSchema,
@@ -15,6 +16,7 @@ export type Post = z.infer<typeof PostSchema>;
 export type Thread = z.infer<typeof ThreadSchema>;
 
 export type Manifest = z.infer<typeof ManifestSchema>;
+export type ManifestEntry = z.infer<typeof ManifestEntrySchema>;
 
 export type UserSchema = z.infer<typeof UserSchema>;
 
