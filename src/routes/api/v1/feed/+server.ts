@@ -42,6 +42,7 @@ export const GET: RequestHandler = async function ({ url }) {
 
 		return json(unwrapped);
 	} catch (err) {
+		console.error(err);
 		assert(err instanceof Error, `unexpected error: ${String(err)}`);
 		return error(500, err);
 	}
