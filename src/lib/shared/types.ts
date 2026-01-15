@@ -1,10 +1,12 @@
 import {
 	CommentSchema,
+	FeedSchema,
 	ManifestEntrySchema,
 	ManifestSchema,
 	MarkdownResponseSchema,
 	PostSchema,
 	ThreadSchema,
+	ThreadWithPreviewSchema,
 	UserSchema
 } from '$lib/shared/schema';
 import { z } from 'zod';
@@ -18,6 +20,8 @@ export type ThreadWithPreview = z.infer<typeof ThreadWithPreviewSchema>;
 
 export type Manifest = z.infer<typeof ManifestSchema>;
 export type ManifestEntry = z.infer<typeof ManifestEntrySchema>;
+
+export type Feed = z.infer<typeof FeedSchema>;
 
 export type UserSchema = z.infer<typeof UserSchema>;
 

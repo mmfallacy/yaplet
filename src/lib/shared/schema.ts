@@ -45,6 +45,16 @@ export const ManifestEntrySchema = z.discriminatedUnion('type', [
 
 export const ManifestSchema = z.array(ManifestEntrySchema);
 
+export const FeedSchema = z.array(
+	z.discriminatedUnion('ok', [
+		z.object({
+			ok: z.literal(true),
+			value: z.discriminatedUnion('type', [PostSchema, ThreadWithPreviewSchema])
+		}),
+		z.object({ ok: z.literal(false), error: z.unknown() })
+	])
+);
+
 export const UserSchema = z.object({
 	id: z.string(),
 	createdAt: z.date(),
