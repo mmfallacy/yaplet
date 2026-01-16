@@ -4,15 +4,13 @@ import { FeedSchema } from '$lib/shared/schema';
 import assert from 'node:assert/strict';
 import { resolve } from '$app/paths';
 
-export const load: PageServerLoad = async function ({ fetch }) {
+async function loadFeed(f: typeof fetch) {
 	try {
-		const res = await fetch(resolve('/api/v1/feed'));
+		const res = await f(resolve('/api/v1/feed'));
 
 		assert(res.ok, 'Successful Response');
 
 		const data = await res.json();
-
-		console.log(data);
 
 		const feed = FeedSchema.parse(data);
 
@@ -23,4 +21,10 @@ export const load: PageServerLoad = async function ({ fetch }) {
 		console.error('Feed load error', err);
 		throw error(500, 'Failed to load data');
 	}
+}
+
+export const load: PageServerLoad = function ({ fetch }) {
+	return {
+		stream: loadFeed(fetch)
+	};
 };
