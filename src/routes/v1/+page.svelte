@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte';
+	import PostCard from '$lib/features/post/PostCard.svelte';
 
 	let { data } = $props();
 
@@ -21,8 +22,7 @@
 					<h1>Thread: {entry.id}-{entry.preview.id}</h1>
 					<p>{entry.preview.content}</p>
 				{:else}
-					<h1>Post: {entry.id}</h1>
-					<p>{entry.content}</p>
+					<PostCard post={entry} />
 				{/if}
 			{/each}
 		</div>
