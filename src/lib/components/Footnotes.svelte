@@ -49,9 +49,11 @@
 		<ol class="list-inside list-decimal space-y-2 text-sm text-muted-foreground">
 			{#each orderedEntries as [key, renderedValue], index (key)}
 				<li id="fn{index + 1}" class="pl-1">
-					<span class="prose-journal inline leading-relaxed text-foreground"
-						>{@html renderedValue}</span
-					>
+					<span class="prose-journal inline leading-relaxed text-foreground">
+						<!-- renderedHtml is sanitized by DOMPurify prior to rendering -->
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html renderedValue}
+					</span>
 				</li>
 			{/each}
 		</ol>
