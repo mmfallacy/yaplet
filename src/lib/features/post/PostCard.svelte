@@ -5,7 +5,7 @@
 	import Renderer from '$lib/features/markdown/Renderer.svelte';
 	import PostImages from './PostImages.svelte';
 	import PostActions from './PostActions.svelte';
-	import Footnotes from '$lib/components/Footnotes.svelte';
+	import Footnotes from './Footnotes.svelte';
 	import PostHeader from './PostHeader.svelte';
 	import { cn } from '$lib/utils';
 	import { goto } from '$app/navigation';
