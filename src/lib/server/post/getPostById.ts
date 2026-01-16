@@ -3,6 +3,8 @@ import matter from 'gray-matter';
 import { getContent } from '../github/repo';
 import { PostSchema } from '$lib/shared/schema';
 import type { Post, Result } from '$lib/shared/types';
+import { marked } from 'marked';
+import { renderer } from '$lib/features/markdown/renderer';
 
 const POST_BASE_PATH_DEFAULT = 'content/standalone/';
 
@@ -18,11 +20,18 @@ export async function getPostById(id: string, basePath?: string): Promise<Result
 
 	const decoded = Buffer.from(result.value.content, 'base64').toString('utf-8');
 	const parsed = matter(decoded);
+
+	const rendered = await marked.parse(parsed.content, {
+		renderer,
+		gfm: true,
+		breaks: true
+	});
+
 	const transformed = PostSchema.safeParse({
 		type: 'standalone',
 		id,
 		...parsed.data,
-		content: parsed.content
+		content: rendered
 	});
 
 	if (!transformed.success)

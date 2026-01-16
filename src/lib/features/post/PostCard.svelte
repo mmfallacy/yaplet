@@ -2,7 +2,7 @@
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { Post } from '$lib/shared/types';
 	import { resolve } from '$app/paths';
-	import MarkdownRenderer from '$lib/components/MarkdownRenderer.svelte';
+	import Renderer from '$lib/features/markdown/Renderer.svelte';
 	import PostImages from './PostImages.svelte';
 	import PostActions from './PostActions.svelte';
 	import Footnotes from '$lib/components/Footnotes.svelte';
@@ -84,7 +84,7 @@
 		<div class="col-start-2 min-w-0">
 			<!-- Content -->
 			<div class="text-foreground">
-				<MarkdownRenderer content={processedContent} />
+				<Renderer content={processedContent} />
 			</div>
 
 			<!-- Footnotes -->

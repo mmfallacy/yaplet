@@ -71,4 +71,5 @@ for thread in manifest.threads:
 
 - [x] feed: get feed and respect limits and offsets.
 
-k
+- [ ] let GET / use new services
+- [/] render marked server side for seo. Sanitize client side for good measures
