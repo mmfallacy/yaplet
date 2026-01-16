@@ -70,7 +70,7 @@
 					isSingle ? 'aspect-auto max-h-[400px] w-full' : 'aspect-video',
 					images.length === 3 && index === 0 && !isSingle && 'row-span-2 aspect-square'
 				)}
-				onclick={() => (selectedIndex = index)}
+				onclick={stopPropagation(() => (selectedIndex = index))}
 			>
 				<img
 					src={getImageSrc(image)}
@@ -95,7 +95,7 @@
 			<button
 				type="button"
 				class="absolute top-0 right-0 z-50 -translate-y-[calc(100%+16px)] rounded-full bg-black/30 p-2 text-white transition-colors hover:bg-black/50"
-				onclick={handleClose}
+				onclick={stopPropagation(handleClose)}
 			>
 				<XIcon class="size-6" />
 				<span class="sr-only">Close</span>
@@ -105,7 +105,7 @@
 				<button
 					type="button"
 					class="absolute top-1/2 left-0 z-50 -translate-x-[calc(100%+16px)] -translate-y-1/2 rounded-full bg-black/30 p-3 text-white transition-colors hover:bg-black/50"
-					onclick={handlePrev}
+					onclick={stopPropagation(handlePrev)}
 				>
 					<ChevronLeftIcon class="size-6" />
 					<span class="sr-only">Previous image</span>
@@ -122,7 +122,7 @@
 				<button
 					type="button"
 					class="absolute top-1/2 right-0 z-50 translate-x-[calc(100%+16px)] -translate-y-1/2 rounded-full bg-black/30 p-3 text-white transition-colors hover:bg-black/50"
-					onclick={handleNext}
+					onclick={stopPropagation(handleNext)}
 				>
 					<ChevronRightIcon class="size-6" />
 					<span class="sr-only">Next image</span>

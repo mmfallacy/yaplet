@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { Heart, MessageCircle, Share2 } from '@lucide/svelte';
 	import { cn, stopPropagation } from '$lib/utils';
+	import { toast } from 'svelte-sonner';
 
 	let {
 		postId,
-		initialLikes,
 		commentCount = 0,
-		onCommentClick,
 		class: className
 	} = $props<{
 		postId: string;
@@ -16,16 +15,10 @@
 		class?: string;
 	}>();
 
-	let likes = $state(initialLikes);
-	let liked = $state(false);
-	let showShareToast = $state(false);
+	let likes = 0;
 
-	function handleLike() {
-		liked = !liked;
-		likes = liked ? likes + 1 : likes - 1;
-	}
-
-	async function handleShare() {
+	async function handleShare(e: MouseEvent) {
+		e.preventDefault();
 		const url = `${window.location.origin}/post/${postId}`;
 
 		if (navigator.share) {
@@ -39,8 +32,7 @@
 			}
 		} else {
 			await navigator.clipboard.writeText(url);
-			showShareToast = true;
-			setTimeout(() => (showShareToast = false), 2000);
+			toast.success('Link copied!');
 		}
 	}
 </script>
@@ -74,12 +66,5 @@
 		>
 			<Share2 size={18} class="transition-transform group-hover:scale-110" />
 		</button>
-		{#if showShareToast}
-			<div
-				class="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background"
-			>
-				Link copied!
-			</div>
-		{/if}
 	</div>
 </div>

@@ -8,6 +8,7 @@
 	import Footnotes from '$lib/components/Footnotes.svelte';
 	import PostHeader from './PostHeader.svelte';
 	import { cn } from '$lib/utils';
+	import { goto } from '$app/navigation';
 
 	let {
 		post,
@@ -73,7 +74,11 @@
 		className
 	)}
 >
-	<a href={resolve(`/post/${post.id}`)} class="block grid grid-cols-[auto_1fr] gap-x-3">
+	<button
+		role="link"
+		onclick={() => goto(resolve(`/post/${post.id}`))}
+		class="block grid cursor-pointer grid-cols-[auto_1fr] gap-x-3 text-left"
+	>
 		<PostHeader createdAt={post.createdAt.toISOString()} />
 
 		<div class="col-start-2 min-w-0">
@@ -110,5 +115,5 @@
 				</div>
 			{/if}
 		</div>
-	</a>
+	</button>
 </article>
