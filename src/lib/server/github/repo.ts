@@ -30,7 +30,7 @@ export async function getContent(path: string): Promise<Result<GhContentResponse
 			// Pass
 			break;
 		case HTTP.NOT_MODIFIED:
-			console.log('Matched Etag, using cache');
+			console.log('304', path);
 			assert(typeof entry !== 'undefined');
 			return { ok: true, value: entry.data };
 		default:
