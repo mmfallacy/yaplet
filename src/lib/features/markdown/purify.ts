@@ -9,7 +9,7 @@ export const uponSanitizeAttributeHook: UponSanitizeAttributeHook = function (_,
 };
 
 export const DOMPURIFY_CONFIG = {
-	ADD_ATTR: ['target', 'rel'],
+	ADD_ATTR: ['target', 'rel', 'onclick'],
 	FORBID_TAGS: ['script', 'iframe', 'object', 'embed'],
 	ALLOWED_TAGS: [
 		'u',
