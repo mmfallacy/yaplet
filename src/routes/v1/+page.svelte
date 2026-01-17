@@ -23,8 +23,14 @@
 					<LoaderCircle class="h-6 w-6 animate-spin text-primary" />
 				</div>
 			{:then data}
-				{@const entries = data.feed.filter((entry) => entry.ok).map((entry) => entry.value)}
+				{@const entries = data.feed
+					.filter((entry) => {
+						if (!entry.ok) console.error(entry);
+						return entry.ok;
+					})
+					.map((entry) => entry.value)}
 				{#each entries as entry (entry.id)}
+					{console.log(entry)}
 					{#if entry.type === 'thread'}
 						<ThreadPreview thread={entry} />
 					{:else}
