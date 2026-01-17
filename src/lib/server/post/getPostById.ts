@@ -5,6 +5,7 @@ import { PostSchema } from '$lib/shared/schema';
 import type { Post, Result } from '$lib/shared/types';
 import { marked } from 'marked';
 import { renderer } from '$lib/features/markdown/renderer';
+import { processFootnotes } from './processFootnotes';
 
 const POST_BASE_PATH_DEFAULT = 'content/standalone/';
 
@@ -27,18 +28,29 @@ export async function getPostById(id: string, basePath?: string): Promise<Result
 		breaks: true
 	});
 
-	const transformed = PostSchema.safeParse({
+	const res = PostSchema.safeParse({
 		type: 'standalone',
 		id,
 		...parsed.data,
 		content: rendered
 	});
 
-	if (!transformed.success)
+	if (!res.success)
 		return {
 			ok: false,
-			error: new Error(`Cannot transform post into proper schema: ${transformed.error.message}`)
+			error: new Error(`Cannot transform post into proper schema: ${res.error.message}`)
 		};
 
-	return { ok: true, value: transformed.data };
+	const transformed = res.data;
+
+	const [newContent, order] = processFootnotes(
+		transformed.content,
+		transformed.footnotes,
+		transformed.id
+	);
+
+	transformed.content = newContent;
+	transformed.footnotes_order = order;
+
+	return { ok: true, value: transformed };
 }
