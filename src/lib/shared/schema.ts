@@ -12,6 +12,7 @@ export const PostSchema = z.object({
 	createdAt: z.coerce.date(),
 	images: z.array(z.string()).optional(),
 	footnotes: z.record(z.string(), z.string()).optional(),
+	footnotes_order: z.array(z.string()).optional(),
 	tags: z.array(z.string()).optional()
 });
 
