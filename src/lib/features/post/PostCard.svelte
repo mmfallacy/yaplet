@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { SvelteMap } from 'svelte/reactivity';
 	import type { Post } from '$lib/shared/types';
 	import { resolve } from '$app/paths';
 	import Renderer from '$lib/features/markdown/Renderer.svelte';
@@ -20,52 +19,9 @@
 		class?: string;
 	}>();
 
-	function preprocessFootnotes(
-		text: string,
-		footnotes?: Record<string, string>
-	): {
-		processed: string;
-		referencedKeys: string[];
-	} {
-		if (!footnotes) {
-			return { processed: text, referencedKeys: [] };
-		}
-
-		const footnotePattern = /\[\^([^\]]+)\]/g;
-		const referencedKeys: string[] = [];
-		const keyToNumber = new SvelteMap<string, number>();
-
-		let match: RegExpExecArray | null;
-		let result = text;
-		let offset = 0;
-
-		while ((match = footnotePattern.exec(text)) !== null) {
-			const [fullMatch, key] = match;
-			const matchIndex = match.index + offset;
-
-			if (Object.hasOwn(footnotes, key)) {
-				if (!keyToNumber.has(key)) {
-					const num = keyToNumber.size + 1;
-					keyToNumber.set(key, num);
-					referencedKeys.push(key);
-				}
-
-				const num = keyToNumber.get(key)!;
-				const replacement = `<sup><a href="#fn${num}" id="ref${num}" class="footnote-ref">[${num}]</a></sup>`;
-				result =
-					result.substring(0, matchIndex) +
-					replacement +
-					result.substring(matchIndex + fullMatch.length);
-				offset += replacement.length - fullMatch.length;
-			}
-		}
-
-		return { processed: result, referencedKeys };
-	}
-
-	const preprocessResult = $derived.by(() => preprocessFootnotes(post.content, post.footnotes));
-	const processedContent = $derived(preprocessResult.processed);
-	const referencedFootnoteKeys = $derived(preprocessResult.referencedKeys);
+	$effect(function () {
+		console.log(post.id, post);
+	});
 </script>
 
 <article
@@ -84,12 +40,12 @@
 		<div class="col-start-2 min-w-0">
 			<!-- Content -->
 			<div class="text-foreground">
-				<Renderer content={processedContent} />
+				<Renderer content={post.content} />
 			</div>
 
 			<!-- Footnotes -->
-			{#if post.footnotes && referencedFootnoteKeys.length > 0}
-				<Footnotes footnotes={post.footnotes} order={referencedFootnoteKeys} />
+			{#if post.footnotes}
+				<Footnotes footnotes={post.footnotes} prefix={post.id} order={post.footnotes_order} />
 			{/if}
 
 			<!-- Images -->

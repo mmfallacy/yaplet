@@ -45,6 +45,7 @@
 			opacity: 0;
 			transform: translateY(8px);
 		}
+
 		to {
 			opacity: 1;
 			transform: translateY(0);
@@ -242,6 +243,15 @@
 
 	.prose-journal .footnote-ref {
 		@apply ml-0.5 align-super text-xs text-primary no-underline;
+	}
+
+	.footnote-target {
+		@apply scroll-mt-15 p-2;
+
+	}
+
+	.footnote-target:target {
+		@apply bg-olive-muted/25;
 	}
 
 	.prose-journal .footnote-ref:hover {
