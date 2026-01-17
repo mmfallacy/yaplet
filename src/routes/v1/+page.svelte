@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte';
 	import PostCard from '$lib/features/post/PostCard.svelte';
+	import ThreadPreview from '$lib/features/thread/ThreadPreview.svelte';
 	import { LoaderCircle } from '@lucide/svelte';
 
 	const { data } = $props();
@@ -25,8 +26,7 @@
 				{@const entries = data.feed.filter((entry) => entry.ok).map((entry) => entry.value)}
 				{#each entries as entry (entry.id)}
 					{#if entry.type === 'thread'}
-						<h1>Thread: {entry.id}-{entry.preview.id}</h1>
-						<p>{entry.preview.content}</p>
+						<ThreadPreview thread={entry} />
 					{:else}
 						<PostCard post={entry} />
 					{/if}
