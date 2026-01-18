@@ -97,3 +97,8 @@ export function joinPaths(...parts: readonly string[]): string {
 		})
 		.join('/');
 }
+
+export function serializeResult(res: Result<unknown, Error>) {
+	if (res.ok) return res;
+	else return { ok: false, error: res.error.message };
+}
