@@ -26,7 +26,7 @@
 >
 	<button
 		role="link"
-		onclick={() => goto(resolve(`/post/${post.id}`))}
+		onclick={() => goto(resolve(`/thread/${thread.id}`))}
 		class="grid cursor-pointer grid-cols-[auto_1fr] gap-x-3 text-left"
 	>
 		<ThreadHeader
