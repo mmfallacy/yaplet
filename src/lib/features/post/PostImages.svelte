@@ -29,7 +29,7 @@
 	);
 
 	function getImageSrc(image: string) {
-		return image.startsWith('http') ? image : resolve(`/api/content/images/${image}`);
+		return image.startsWith('http') ? image : resolve(`/api/v1/images/${image}`);
 	}
 
 	function handleNext() {
