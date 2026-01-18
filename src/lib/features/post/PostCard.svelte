@@ -18,10 +18,6 @@
 		showActions?: boolean;
 		class?: string;
 	}>();
-
-	$effect(function () {
-		console.log(post.id, post);
-	});
 </script>
 
 <article
