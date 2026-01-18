@@ -1,19 +1,15 @@
 import assert from 'node:assert';
-import { GITHUB_PAT } from '$env/static/private';
+import { GITHUB_PAT, CONTENT_BASE_URL, CONTENT_REF } from '$env/static/private';
 import { createMemoryCache } from '$lib/server/cache';
 import type { Result } from '$lib/shared/types';
 import { GhContentResponseSchema, type GhContentResponse } from './schema';
 import HTTP from 'http-status-codes';
 
-// TODO: Extract this as the new env vars
-const API_CONTENT_BASE_URL = 'https://api.github.com/repos/mmfallacy/yaplet-content/contents/';
-const API_CONTENT_REF = 'v1';
-
 const MemoryCache = createMemoryCache<{ etag: string; data: GhContentResponse }>();
 
 export async function getContent(path: string): Promise<Result<GhContentResponse, Error>> {
-	const url = new URL(path, API_CONTENT_BASE_URL);
-	url.searchParams.set('ref', API_CONTENT_REF);
+	const url = new URL(path, CONTENT_BASE_URL);
+	url.searchParams.set('ref', CONTENT_REF);
 
 	const entry = MemoryCache.get(path);
 	const response = await fetch(url, {
