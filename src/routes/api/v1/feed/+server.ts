@@ -1,7 +1,7 @@
 import { getManifest } from '$lib/server/manifest/getManifest';
 import { getPostById } from '$lib/server/post/getPostById';
 import { getThreadById } from '$lib/server/thread/getThreadById';
-import type { Result } from '$lib/shared/types';
+import { serializeResult } from '$lib/utils';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import assert from 'node:assert/strict';
 import z from 'zod/v4';
@@ -10,11 +10,6 @@ const QuerySchema = z.object({
 	offset: z.coerce.number().int().positive().default(0),
 	limit: z.coerce.number().int().positive().optional()
 });
-
-function serialize(res: Result<unknown, Error>) {
-	if (res.ok) return res;
-	else return { ok: false, error: res.error.message };
-}
 
 export const GET: RequestHandler = async function ({ url }) {
 	try {
@@ -38,7 +33,7 @@ export const GET: RequestHandler = async function ({ url }) {
 		const unwrapped = settled.map(function (result) {
 			switch (result.status) {
 				case 'fulfilled':
-					return serialize(result.value);
+					return serializeResult(result.value);
 				case 'rejected':
 					return { ok: false, error: result.reason };
 				default:

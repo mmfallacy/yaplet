@@ -1,8 +1,9 @@
 import type { Post, Result } from '$lib/shared/types';
+import { serializeResult } from '$lib/utils';
 import { getPostById } from './getPostById';
 
 // Returns an array of Results
-export async function getPostByIds(
+export async function getPostsByIds(
 	ids: string[],
 	basePath?: string
 ): Promise<Result<Post, Error>[]> {
@@ -10,7 +11,7 @@ export async function getPostByIds(
 	return res.map(function (result) {
 		switch (result.status) {
 			case 'fulfilled':
-				return result.value;
+				return serializeResult(result.value);
 			case 'rejected':
 				return { ok: false, error: result.reason };
 			default:
