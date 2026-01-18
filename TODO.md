@@ -25,12 +25,51 @@
     - fetchThreads
     - fetch
 
+- manifest.json
+  - make manifest auto generated via a script. Include createdAt date to easily get recent X posts.
+
+- Flow:
+
+```py
+manifest = fetch_manifest() # under the hood, fetch(api/content/manifest.json) and zod parse
+
+posts = fetch_posts(manifest.standalone) # under the hood, calls fetch(api/content/standalone/*) for all posts in argument
+
+for thread in manifest.threads:
+  thread = fetch_thread() # under the hood, fetch(api/content/threads/*)
+  posts = fetch_posts(thread.posts)
+```
+
 - yaplet-content
-  - track contents onto database to enable sorted, or should i track it in a automatically generated file within the repo so upon clone so no need to have two sources of truth
+  - ~~track contents onto database to enable sorted, or should i track it in an automatically generated file within the repo so upon clone so no need to have two sources of truth~~
+  - use github api. leverage Repository Contents 304 not modified so no need to requery when posts arent modified.
+  - why not place manifest.json into the postgres neon table so its easy to query. Link instead the github api url and make generate-manifest push to the db
+
+- Consider running errors as return values instead of exceptions. Where's the edge boundary though? (outermost layer in our handling s.t. it still runs exceptions)
+- What if we do:
+  - +server.ts GET POST PUT etc. run errors as exceptions.
+  - internal $/lib/server/manifest.ts and $/lib/server/post.ts does error as values.
+  - Need a way to structure $/lib/server/\* properly.
 
 ## TODO
 
 - [ ] Plan how to incrementally refactor this without breaking everything.
 - [ ] auth.svelte.ts: Add deprecation warning on import
-- [ ] post.ts: Extract schemas onto schema.ts
-- [ ] post.ts: Extract schemas onto schema.ts
+- [x] post.ts: Extract schemas onto schema.ts
+- [ ] enable prerenders
+- [x] github.server.ts: add api based fetching
+- [x] github.server.ts: add checking etag for not modified
+- [ ] github.server.ts: add on disk caching
+- [x] errors as return values for features
+- [x] keep errors as exceptions for HTTP handlers
+
+- [x] manifest.ts: fetchManifest()
+- [x] yaplet-content: generate-manifest.ts: Generate manifests given repository.
+- [x] api/v1/post/[id]: fetchPost(id)
+- [x] api/v1/: fetchPosts(id[])
+- [x] threads.ts: fetchThread()
+
+- [x] feed: get feed and respect limits and offsets.
+
+- [ ] let GET / use new services
+- [/] render marked server side for seo. Sanitize client side for good measures

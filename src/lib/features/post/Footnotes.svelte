@@ -7,9 +7,11 @@
 	let {
 		footnotes,
 		order = [],
+		prefix,
 		class: className
 	} = $props<{
 		footnotes: Record<string, string>;
+		prefix: string;
 		order?: string[];
 		class?: string;
 	}>();
@@ -46,12 +48,14 @@
 
 {#if orderedEntries.length > 0}
 	<section class={cn('mt-4 border-t border-border pt-4', className)}>
-		<ol class="list-inside list-decimal space-y-2 text-sm text-muted-foreground">
-			{#each orderedEntries as [key, renderedValue], index (key)}
-				<li id="fn{index + 1}" class="pl-1">
-					<span class="prose-journal inline leading-relaxed text-foreground"
-						>{@html renderedValue}</span
-					>
+		<ol class="list-inside list-decimal text-sm text-muted-foreground">
+			{#each orderedEntries as [key, renderedValue] (key)}
+				<li id={`fn-${prefix}-${key}`} class="footnote-target pl-1">
+					<span class="prose-journal inline leading-relaxed text-foreground">
+						<!-- renderedHtml is sanitized by DOMPurify prior to rendering -->
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html renderedValue}
+					</span>
 				</li>
 			{/each}
 		</ol>

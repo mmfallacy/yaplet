@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { MessageCircle } from '@lucide/svelte';
 	import { formatDate } from '$lib/utils';
-	import { resolve } from '$app/paths';
 
 	const USERNAME = 'mmfallacy';
 	const GITHUB_LINK = 'https://www.github.com/mmfallacy';
 	const AVATAR = 'https://avatars.githubusercontent.com/u/31348500';
 
-	let { createdAt, threadTitle, threadId, postCount } = $props<{
+	let { createdAt } = $props<{
 		createdAt: string;
 		threadTitle?: string;
 		threadId?: string;
@@ -31,17 +29,4 @@
 			{formatDate(createdAt)}
 		</time>
 	</div>
-
-	{#if threadTitle}
-		<a
-			href={resolve(`/thread/${threadId}`)}
-			class="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary transition-colors hover:bg-primary/20"
-		>
-			<MessageCircle size={12} />
-			<span>{threadTitle}</span>
-			{#if postCount !== undefined}
-				<span class="text-primary/70">· {postCount} posts</span>
-			{/if}
-		</a>
-	{/if}
 </div>

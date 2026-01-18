@@ -1,0 +1,76 @@
+import { z } from 'zod';
+
+export const MarkdownResponseSchema = z.object({
+	data: z.record(z.string(), z.unknown()),
+	content: z.string()
+});
+
+export const PostSchema = z.object({
+	type: z.literal('standalone'),
+	id: z.string(),
+	content: z.string(),
+	createdAt: z.coerce.date(),
+	images: z.array(z.string()).optional(),
+	footnotes: z.record(z.string(), z.string()).optional(),
+	footnotes_order: z.array(z.string()).optional(),
+	tags: z.array(z.string()).optional()
+});
+
+export const ThreadSchema = z.object({
+	type: z.literal('thread'),
+	id: z.string(),
+	title: z.string(),
+	description: z.string(),
+	createdAt: z.coerce.date(),
+	posts: z.array(PostSchema.shape.id)
+});
+
+export const ThreadWithPreviewSchema = z.object({
+	...ThreadSchema.shape,
+	preview: PostSchema
+});
+
+export const ManifestEntrySchema = z.discriminatedUnion('type', [
+	z.object({
+		type: z.literal('standalone'),
+		id: z.string(),
+		createdAt: z.string().datetime()
+	}),
+	z.object({
+		type: z.literal('thread'),
+		id: z.string(),
+		createdAt: z.string().datetime(),
+		posts: z.array(z.string())
+	})
+]);
+
+export const ManifestSchema = z.array(ManifestEntrySchema);
+
+export const FeedSchema = z.array(
+	z.discriminatedUnion('ok', [
+		z.object({
+			ok: z.literal(true),
+			value: z.discriminatedUnion('type', [PostSchema, ThreadWithPreviewSchema])
+		}),
+		z.object({ ok: z.literal(false), error: z.unknown() })
+	])
+);
+
+export const UserSchema = z.object({
+	id: z.string(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+	email: z.email(),
+	emailVerified: z.boolean(),
+	name: z.string(),
+	image: z.union([z.string(), z.null(), z.undefined()]),
+	username: z.string()
+});
+
+export const CommentSchema = z.object({
+	id: z.string(),
+	postId: PostSchema.shape.id,
+	userId: UserSchema.shape.id,
+	content: z.string(),
+	createdAt: z.date()
+});

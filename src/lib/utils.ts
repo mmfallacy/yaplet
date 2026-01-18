@@ -1,6 +1,11 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+import type { PostWithThread } from './types';
+import type { Result } from './shared/types';
+import assert from 'node:assert/strict';
+import z from 'zod';
+
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
@@ -11,8 +16,6 @@ export type WithoutChild<T> = T extends { child?: any } ? Omit<T, 'child'> : T;
 export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'children'> : T;
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
-
-import type { PostWithThread } from './types';
 
 export function filterByDateRange(
 	posts: PostWithThread[],
@@ -72,4 +75,30 @@ export function stopPropagation<T extends MouseEvent>(handler: (e: T) => void) {
 		handler(e);
 		e.stopPropagation();
 	};
+}
+
+export function JSONsafeParse<T>(value: string, schema: z.ZodType<T>): Result<T, Error> {
+	try {
+		return { ok: true, value: schema.parse(JSON.parse(value)) };
+	} catch (err) {
+		assert(err instanceof Error);
+		return { ok: false, error: err };
+	}
+}
+
+export function joinPaths(...parts: readonly string[]): string {
+	return parts
+		.filter(Boolean)
+		.map((part, index) => {
+			// Remove trailing slashes for first
+			if (index === 0) return part.replace(/\/+$/g, '');
+			// Remove slashes both sides
+			return part.replace(/^\/+|\/+$/g, '');
+		})
+		.join('/');
+}
+
+export function serializeResult(res: Result<unknown, Error>) {
+	if (res.ok) return res;
+	else return { ok: false, error: res.error.message };
 }
