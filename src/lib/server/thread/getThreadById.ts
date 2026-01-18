@@ -5,7 +5,7 @@ import z from 'zod';
 import { ThreadSchema } from '$lib/shared/schema';
 import { getPostById } from '../post/getPostById';
 
-export async function getThreadById(id: string): Promise<Result<unknown, Error>> {
+export async function getThreadById(id: string): Promise<Result<ThreadWithPreview, Error>> {
 	const basePath = `content/threads/${id}`;
 
 	const meta = await getContent(`${basePath}/meta.json`);
