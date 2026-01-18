@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getContent } from '$lib/server/github/repo';
 import HTTP from 'http-status-codes';
-import assert from 'assert';
+import assert from 'node:assert/strict';
 
 function getImageContentType(path: string): string | false {
 	switch (true) {
