@@ -26,7 +26,6 @@ A twitter-esque microblogging platform for my short yaps
 
 ### Prerequisites
 
-- Node.js 20+
 - [Bun](https://bun.sh/) runtime
 - GitHub Personal Access Token (for content fetching)
 
@@ -75,6 +74,15 @@ Preview the production build:
 ```sh
 bun preview
 ```
+
+## API Endpoints
+
+| Endpoint                  | Description                 |
+| ------------------------- | --------------------------- |
+| `GET /api/v1/feed`        | Fetch all posts and threads |
+| `GET /api/v1/post/:id`    | Fetch single post by ID     |
+| `GET /api/v1/thread/:id`  | Fetch thread by ID          |
+| `POST /api/v1/batch/post` | Fetch multiple posts by ID  |
 
 ## Content Structure
 
@@ -135,22 +143,61 @@ Your post content here...
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   Frontend (SvelteKit)	      │
+│                 Frontend (SvelteKit)                 │
 │  ┌─────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐  │
-│  │ Threads │ │  Posts   │ │  Search  │ │ Profile │  │
+│  │ Threads │ │  Posts   │ │   Feed   │ │  Auth   │  │
 │  └─────────┘ └──────────┘ └──────────┘ └─────────┘  │
-└────────────────────────┬────────────────────────────┘
-                         │ /api/content/*
-                         ▼
+│    │           │              │           │          │
+│    └───────────┴──────────────┴───────────┘          │
+│                        │                             │
+│                        ▼                             │
+│              ┌─────────────────────┐                 │
+│              │   API Routes        │                 │
+│              │   /api/v1/*         │                 │
+│              └──────────┬──────────┘                 │
+└─────────────────────────┼────────────────────────────┘
+                          │
+                          ▼
 ┌─────────────────────────────────────────────────────┐
-│              Server-Side Proxy (SvelteKit)          │
-│  ┌──────────────────────────────────────────────┐   │
-│  │  GitHub API (raw.githubusercontent.com)      │   │
-│  └──────────────────────────────────────────────┘   │
+│              Server Modules (lib/server/)            │
+│  ┌─────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐  │
+│  │  Auth   │ │  GitHub  │ │  Posts   │ │ Threads │  │
+│  └─────────┘ └──────────┘ └──────────┘ └─────────┘  │
+│                     │                               │
+│                     ▼                               │
+│              ┌─────────────┐                        │
+│              │ GitHub API  │                        │
+│              └─────────────┘                        │
 └─────────────────────────────────────────────────────┘
 ```
 
-Content is fetched directly from GitHub via server-side proxy endpoints, ensuring your GitHub PAT never leaks to the client.
+## Project Structure
+
+```
+src/
+├── lib/
+│   ├── components/     # Shared UI components (shadcn-svelte)
+│   ├── features/       # Feature-scoped components
+│   │   ├── markdown/   # Markdown rendering & sanitization
+│   │   ├── post/       # Post-related components
+│   │   └── thread/     # Thread-related components
+│   ├── server/         # Server-side modules
+│   │   ├── auth.server.ts
+│   │   ├── github/     # GitHub API & caching
+│   │   ├── manifest/   # Manifest fetching
+│   │   ├── post/       # Post fetching & processing
+│   │   └── thread/     # Thread fetching
+│   └── shared/         # Shared schemas & types
+├── routes/
+│   ├── +layout.svelte  # Global layout with auth
+│   ├── +page.svelte    # Feed page
+│   ├── api/v1/         # API endpoints
+│   ├── post/[postId]/  # Single post page
+│   └── thread/[threadId]/  # Thread page
+└── app.d.ts
+```
+
+Content is fetched server-side via `lib/server/` modules, ensuring your GitHub PAT never leaks to the client.
 
 ## Scripts
 
@@ -160,6 +207,18 @@ Content is fetched directly from GitHub via server-side proxy endpoints, ensurin
 - `bun check` - Run TypeScript and Svelte checks
 - `bun format` - Format code with Prettier
 - `bun lint` - Lint with ESLint and Prettier
+
+## Development
+
+This project uses [Nix](https://nix.dev/) for development environment reproducibility.
+
+```sh
+# Enter the dev shell (if Nix is installed)
+nix-shell ./nix/devShell.nix
+
+# Or use direnv to automatically load the environment
+direnv allow
+```
 
 ## License
 
