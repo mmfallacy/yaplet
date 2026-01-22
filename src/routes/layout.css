@@ -183,6 +183,39 @@
 		@apply align-super;
 	}
 
+	.prose-journal h1,
+	.prose-journal h2,
+	.prose-journal h3,
+	.prose-journal h4,
+	.prose-journal h5,
+	.prose-journal h6 {
+		@apply mt-4 mb-1.5 font-semibold tracking-tight text-foreground;
+	}
+
+	.prose-journal h1 {
+		@apply text-xl;
+	}
+
+	.prose-journal h2 {
+		@apply text-lg;
+	}
+
+	.prose-journal h3 {
+		@apply text-base;
+	}
+
+	.prose-journal h4 {
+		@apply text-sm;
+	}
+
+	.prose-journal h5 {
+		@apply text-xs font-medium;
+	}
+
+	.prose-journal h6 {
+		@apply text-xs text-muted-foreground;
+	}
+
 	.prose-journal code {
 		@apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground;
 	}
@@ -247,7 +280,6 @@
 
 	.footnote-target {
 		@apply scroll-mt-15 p-2;
-
 	}
 
 	.footnote-target:target {
