@@ -4,6 +4,7 @@ import { createMemoryCache } from '$lib/server/cache';
 import type { ServiceResult } from '$lib/shared/types';
 import { GhContentResponseSchema, type GhContentResponse } from './schema';
 import HTTP from 'http-status-codes';
+import { ServiceResultStatus as Status } from '$lib/shared/const';
 
 const MemoryCache = createMemoryCache<{ etag: string; data: GhContentResponse }>();
 
@@ -28,10 +29,10 @@ export async function getContent(path: string): Promise<Result<GhContentResponse
 		case HTTP.NOT_MODIFIED:
 			console.log('304', path);
 			assert(typeof entry !== 'undefined');
-			return { status: 'not_modified', ok: true, value: entry.data };
+			return { status: Status.NOT_MODIFIED, ok: true, value: entry.data };
 		default:
 			return {
-				status: 'error',
+				status: Status.ERROR,
 				ok: false,
 				error: new Error(`Failed to fetch ${path}: ${response.status} ${response.statusText}`)
 			};
@@ -48,5 +49,5 @@ export async function getContent(path: string): Promise<Result<GhContentResponse
 		data: parsed.data
 	});
 
-	return { status: 'success', ok: true, value: parsed.data };
+	return { status: Status.SUCCESS, ok: true, value: parsed.data };
 }
