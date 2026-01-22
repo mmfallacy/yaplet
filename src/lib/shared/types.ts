@@ -9,6 +9,7 @@ import {
 	ThreadWithPreviewSchema,
 	UserSchema
 } from '$lib/shared/schema';
+import { ServiceResultStatus as Status } from '$lib/shared/const';
 import { z } from 'zod';
 
 export type MarkdownResponse = z.infer<typeof MarkdownResponseSchema>;
@@ -37,14 +38,20 @@ export type Result<T, E extends Error> =
 			error: E;
 	  };
 
+type ServiceResultSuccess<T> = {
+	status: typeof Status.SUCCESS;
+} & Extract<Result<T, never>, { ok: true }>;
+
+type ServiceResultError<E extends Error> = {
+	status: typeof Status.ERROR;
+} & Extract<Result<never, E>, { ok: false }>;
+
+type ServiceResultNotModified<T> = {
+	status: typeof Status.NOT_MODIFIED;
+	// Temporarily add success-specific fields for incremental refactoring
+} & Extract<Result<T, never>, { ok: true }>;
+
 export type ServiceResult<T, E extends Error> =
-	| ({
-			status: 'success';
-	  } & Result<T, never>)
-	| ({
-			status: 'error';
-	  } & Result<never, E>)
-	| ({
-			status: 'not_modified';
-			// Temporarily add success-specific fields for incremental refactoring
-	  } & Result<T, never>);
+	| ServiceResultSuccess<T>
+	| ServiceResultError<E>
+	| ServiceResultNotModified<T>;
