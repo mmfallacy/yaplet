@@ -16,7 +16,11 @@ function replaceRange(str: string, start: number, end: number, replacement: stri
 // content: post content
 // footnotes: record<key, footnote value>
 // prefix: post_id to be used as footnote href prefix
-export function processFootnotes(content: string, footnotes: Post['footnotes'], prefix: string) {
+export function processFootnotes(
+	content: string,
+	footnotes: Post['footnotes'],
+	prefix: string
+): [string, string[]] {
 	if (typeof footnotes === 'undefined') return [content, []];
 
 	const keyIndices = new Map();
