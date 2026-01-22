@@ -274,8 +274,12 @@
 		@apply inline-block;
 	}
 
-	.prose-journal .footnote-ref {
-		@apply ml-0.5 align-super text-xs text-primary no-underline;
+	.prose-journal .footnote {
+		@apply ml-0.5 relative -top-0.5 text-xs text-primary no-underline;
+
+		a {
+			@apply no-underline;
+		}
 	}
 
 	.footnote-target {
@@ -286,7 +290,7 @@
 		@apply bg-olive-muted/25;
 	}
 
-	.prose-journal .footnote-ref:hover {
+	.prose-journal .footnote:hover {
 		@apply underline;
 	}
 
