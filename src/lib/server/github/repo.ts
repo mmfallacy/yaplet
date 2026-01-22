@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { GITHUB_PAT, CONTENT_BASE_URL, CONTENT_REF } from '$env/static/private';
 import { createMemoryCache } from '$lib/server/cache';
-import type { Result } from '$lib/shared/types';
+import type { ServiceResult } from '$lib/shared/types';
 import { GhContentResponseSchema, type GhContentResponse } from './schema';
 import HTTP from 'http-status-codes';
 
@@ -28,9 +28,10 @@ export async function getContent(path: string): Promise<Result<GhContentResponse
 		case HTTP.NOT_MODIFIED:
 			console.log('304', path);
 			assert(typeof entry !== 'undefined');
-			return { ok: true, value: entry.data };
+			return { status: 'not_modified', ok: true, value: entry.data };
 		default:
 			return {
+				status: 'error',
 				ok: false,
 				error: new Error(`Failed to fetch ${path}: ${response.status} ${response.statusText}`)
 			};
@@ -47,5 +48,5 @@ export async function getContent(path: string): Promise<Result<GhContentResponse
 		data: parsed.data
 	});
 
-	return { ok: true, value: parsed.data };
+	return { status: 'success', ok: true, value: parsed.data };
 }

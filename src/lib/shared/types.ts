@@ -36,3 +36,15 @@ export type Result<T, E extends Error> =
 			ok: false;
 			error: E;
 	  };
+
+export type ServiceResult<T, E extends Error> =
+	| ({
+			status: 'success';
+	  } & Result<T, never>)
+	| ({
+			status: 'error';
+	  } & Result<never, E>)
+	| ({
+			status: 'not_modified';
+			// Temporarily add success-specific fields for incremental refactoring
+	  } & Result<T, never>);
