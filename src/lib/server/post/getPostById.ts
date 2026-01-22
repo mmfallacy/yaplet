@@ -6,18 +6,36 @@ import type { Post, Result } from '$lib/shared/types';
 import { marked } from 'marked';
 import { renderer } from '$lib/features/markdown/renderer';
 import { processFootnotes } from './processFootnotes';
+import { createMemoryCache } from '$lib/server/cache';
+import { ServiceResultStatus as Status } from '$lib/shared/const';
+import assert from 'node:assert/strict';
 
 const POST_BASE_PATH_DEFAULT = 'content/standalone/';
+
+const MemoryCache = createMemoryCache<Post>();
 
 export async function getPostById(id: string, basePath?: string): Promise<Result<Post, Error>> {
 	const resolvedPath = joinPaths(basePath ?? POST_BASE_PATH_DEFAULT, normalizeMarkdownFilename(id));
 
 	const result = await getContent(resolvedPath);
-	if (!result.ok)
+
+	const entry = MemoryCache.get(id);
+
+	if (result.status === Status.NOT_MODIFIED && typeof entry !== 'undefined') {
+		console.info(`[CACHE HIT] Post ${id}`);
+		return {
+			ok: true,
+			value: entry
+		};
+	} else if (result.status === Status.ERROR) {
+		const error = new Error(`Failed to get manifest from repository: ${result?.error.message}`);
+		console.error(error);
 		return {
 			ok: false,
-			error: new Error(`Failed to get manifest from repository: ${result.error.message}`)
+			error
 		};
+	} // Else, pass
+	console.info(`[CACHE MISS] Post ${id}`);
 
 	const decoded = Buffer.from(result.value.content, 'base64').toString('utf-8');
 	const parsed = matter(decoded);
@@ -51,6 +69,8 @@ export async function getPostById(id: string, basePath?: string): Promise<Result
 
 	transformed.content = newContent;
 	transformed.footnotes_order = order;
+
+	MemoryCache.set(id, transformed);
 
 	return { ok: true, value: transformed };
 }
