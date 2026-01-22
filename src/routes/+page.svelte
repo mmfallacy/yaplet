@@ -27,9 +27,9 @@
 				.map((entry) => entry.value)}
 			{#each entries as entry (entry.id)}
 				{#if entry.type === 'thread'}
-					<ThreadPreview thread={entry} />
+					<ThreadPreview thread={entry} href={`/thread/${entry.id}`} />
 				{:else}
-					<PostCard post={entry} />
+					<PostCard post={entry} href={`/post/${entry.id}`} />
 				{/if}
 			{/each}
 		{/await}

@@ -38,7 +38,7 @@
 				</div>
 
 				<div class="col-start-2 row-start-1">
-					<PostCard {post} />
+					<PostCard {post} href={`/thread/${thread.id}/${post.id}`} />
 				</div>
 			</div>
 		{/each}

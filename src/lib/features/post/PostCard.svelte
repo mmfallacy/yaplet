@@ -9,15 +9,19 @@
 	import { cn } from '$lib/utils';
 	import { goto } from '$app/navigation';
 
+	type ValidHref = `/post/${string}` | `/thread/${string}/${string}`;
+
 	let {
 		post,
+		href,
 		showActions = true,
 		class: className
-	} = $props<{
+	}: {
 		post: Post;
+		href?: ValidHref;
 		showActions?: boolean;
 		class?: string;
-	}>();
+	} = $props();
 </script>
 
 <article
@@ -28,8 +32,8 @@
 >
 	<button
 		role="link"
-		onclick={() => goto(resolve(`/post/${post.id}`))}
-		class="block grid cursor-pointer grid-cols-[auto_1fr] gap-x-3 text-left"
+		onclick={() => href && goto(resolve(href))}
+		class={cn('grid grid-cols-[auto_1fr] gap-x-3 text-left', href && 'cursor-pointer')}
 	>
 		<PostHeader createdAt={post.createdAt.toISOString()} />
 

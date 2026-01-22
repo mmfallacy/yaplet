@@ -9,11 +9,19 @@
 	import { goto } from '$app/navigation';
 	import ThreadHeader from './ThreadHeader.svelte';
 
+	type ValidHref = `/thread/${string}`;
+
 	let {
 		thread,
+		href,
 		showActions = true,
 		class: className
-	}: { thread: ThreadWithPreview; showActions?: boolean; class?: string } = $props();
+	}: {
+		thread: ThreadWithPreview;
+		href?: ValidHref;
+		showActions?: boolean;
+		class?: string;
+	} = $props();
 
 	const post = $derived(thread.preview);
 </script>
@@ -26,8 +34,8 @@
 >
 	<button
 		role="link"
-		onclick={() => goto(resolve(`/thread/${thread.id}`))}
-		class="grid cursor-pointer grid-cols-[auto_1fr] gap-x-3 text-left"
+		onclick={() => href && goto(resolve(href))}
+		class={cn('grid grid-cols-[auto_1fr] gap-x-3 text-left', href && 'cursor-pointer')}
 	>
 		<ThreadHeader
 			createdAt={post.createdAt.toISOString()}
