@@ -23,6 +23,8 @@ mkShell {
       svelte-language-server
 
       gen-webhook-secret
+
+      flyctl
     ]
     ++ pkgs.lib.mapAttrsToList (k: v: pkgs.writeShellScriptBin k v) {
       pnpm = "corepack pnpm \$@";
