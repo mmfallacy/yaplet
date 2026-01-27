@@ -1,16 +1,14 @@
 import { betterAuth, type BetterAuthOptions } from 'better-auth';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
-import { Env } from '$lib/env';
-import { customSession } from 'better-auth/plugins';
-
-const {
+import {
 	GITHUB_CLIENT_SECRET,
 	GITLAB_CLIENT_SECRET,
 	GITLAB_CLIENT_ID,
 	GITHUB_CLIENT_ID,
 	GITLAB_ISSUER
-} = Env;
+} from '$lib/env';
+import { customSession } from 'better-auth/plugins';
 
 const options = {
 	socialProviders: {

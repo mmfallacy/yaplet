@@ -4,9 +4,7 @@ import type { ServiceResult } from '$lib/shared/types';
 import { GhContentResponseSchema, type GhContentResponse } from './schema';
 import HTTP from 'http-status-codes';
 import { ServiceResultStatus as Status } from '$lib/shared/const';
-import { Env } from '$lib/env';
-
-const { GITHUB_PAT, CONTENT_BASE_URL, CONTENT_REF } = Env;
+import { GITHUB_PAT, CONTENT_BASE_URL, CONTENT_REF } from '$lib/env';
 
 const MemoryCache = createMemoryCache<{ etag: string; data: GhContentResponse }>();
 

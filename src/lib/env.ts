@@ -1,21 +1,29 @@
+import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
-import { z } from 'zod';
+import assert from 'node:assert/strict';
 
-const AuthEnvSchema = z.object({
-	GITHUB_CLIENT_SECRET: z.string(),
-	GITLAB_CLIENT_SECRET: z.string(),
-	GITLAB_CLIENT_ID: z.string(),
-	GITHUB_CLIENT_ID: z.string(),
-	GITLAB_ISSUER: z.string()
-});
+export const GITHUB_CLIENT_ID = env.GITHUB_CLIENT_ID ?? '';
+export const GITHUB_CLIENT_SECRET = env.GITHUB_CLIENT_SECRET ?? '';
+export const GITLAB_CLIENT_ID = env.GITLAB_CLIENT_ID ?? '';
+export const GITLAB_CLIENT_SECRET = env.GITLAB_CLIENT_SECRET ?? '';
+export const GITLAB_ISSUER = env.GITLAB_ISSUER ?? 'https://gitlab.com';
 
-const ContentEnvSchema = z.object({
-	GITHUB_PAT: z.string(),
-	CONTENT_BASE_URL: z.string(),
-	CONTENT_REF: z.string()
-});
+export const GITHUB_PAT = env.GITHUB_PAT ?? '';
+export const CONTENT_BASE_URL = env.CONTENT_BASE_URL ?? '';
+export const CONTENT_REF = env.CONTENT_REF ?? '';
 
-export const Env = {
-	...AuthEnvSchema.parse(env),
-	...ContentEnvSchema.parse(env)
-};
+function isUndefined<T>(val: T | undefined) {
+	return typeof val === 'undefined';
+}
+
+if (!building) {
+	assert(!isUndefined(env.GITHUB_CLIENT_ID));
+	assert(!isUndefined(env.GITHUB_CLIENT_SECRET));
+	assert(!isUndefined(env.GITLAB_CLIENT_ID));
+	assert(!isUndefined(env.GITLAB_CLIENT_SECRET));
+	assert(!isUndefined(env.GITLAB_ISSUER));
+
+	assert(!isUndefined(env.GITHUB_PAT));
+	assert(!isUndefined(env.CONTENT_BASE_URL));
+	assert(!isUndefined(env.CONTENT_REF));
+}
