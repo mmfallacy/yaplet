@@ -8,7 +8,6 @@ import { renderer } from '$lib/features/markdown/renderer';
 import { processFootnotes } from './processFootnotes';
 import { createMemoryCache } from '$lib/server/cache';
 import { ServiceResultStatus as Status } from '$lib/shared/const';
-import assert from 'node:assert/strict';
 
 const POST_BASE_PATH_DEFAULT = 'content/standalone/';
 

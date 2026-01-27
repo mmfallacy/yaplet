@@ -1,14 +1,16 @@
 import assert from 'node:assert';
-import { GITHUB_PAT, CONTENT_BASE_URL, CONTENT_REF } from '$env/static/private';
 import { createMemoryCache } from '$lib/server/cache';
 import type { ServiceResult } from '$lib/shared/types';
 import { GhContentResponseSchema, type GhContentResponse } from './schema';
 import HTTP from 'http-status-codes';
 import { ServiceResultStatus as Status } from '$lib/shared/const';
+import { Env } from '$lib/env';
+
+const { GITHUB_PAT, CONTENT_BASE_URL, CONTENT_REF } = Env;
 
 const MemoryCache = createMemoryCache<{ etag: string; data: GhContentResponse }>();
 
-export async function getContent(path: string): Promise<Result<GhContentResponse, Error>> {
+export async function getContent(path: string): Promise<ServiceResult<GhContentResponse, Error>> {
 	const url = new URL(path, CONTENT_BASE_URL);
 	url.searchParams.set('ref', CONTENT_REF);
 
